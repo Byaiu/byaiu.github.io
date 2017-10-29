@@ -4,22 +4,18 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content=' Postscript 如何在Linux上使用 Postscript本归Adobe公司所有，但后来也有了开源的程序可以解释类似的语言，就是ghostscript。只要安装过tex一些套件，系统中就会有gs这个程序，命令行输入gs，就进入了postscript的解释器，可以完成代码输入与验证。
-基本概念 这是一个图灵完备的语言（大家都这么说，没有验证过），也有常见的编程概念，比如运算、过程定义、变量等。
- 基于栈 后缀表达式 内建的字体接口  '>
+<meta name='description' content='dtrace的由来 听过一些八卦，意思是Sun的Solaris有很多杀手级的特点，比如说ZFS，还有一个就是DTrace，这些特点都让Linux的玩家们羡慕不已。DTrace可以在运行时注入一段自定义代码来完成某些信息的搜集和处理，而且这段代码是可以被验证的，可以保证不会损害系统的安全性。'>
 
-<meta property='og:title' content='Postscript ⋆ Sytrumics'>
-<meta property='og:description' content=' Postscript 如何在Linux上使用 Postscript本归Adobe公司所有，但后来也有了开源的程序可以解释类似的语言，就是ghostscript。只要安装过tex一些套件，系统中就会有gs这个程序，命令行输入gs，就进入了postscript的解释器，可以完成代码输入与验证。
-基本概念 这是一个图灵完备的语言（大家都这么说，没有验证过），也有常见的编程概念，比如运算、过程定义、变量等。
- 基于栈 后缀表达式 内建的字体接口  '>
-<meta property='og:url' content='http://www.example.com/blog/postscript/'>
+<meta property='og:title' content='Dtrace in linux ⋆ Sytrumics'>
+<meta property='og:description' content='dtrace的由来 听过一些八卦，意思是Sun的Solaris有很多杀手级的特点，比如说ZFS，还有一个就是DTrace，这些特点都让Linux的玩家们羡慕不已。DTrace可以在运行时注入一段自定义代码来完成某些信息的搜集和处理，而且这段代码是可以被验证的，可以保证不会损害系统的安全性。'>
+<meta property='og:url' content='http://www.example.com/blog/dtrace/'>
 <meta property='og:site_name' content='Sytrumics'>
-<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:published_time' content='2017-01-01T19:49:49&#43;08:00'/><meta property='article:modified_time' content='2017-01-01T19:49:49&#43;08:00'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:published_time' content='2017-10-29T11:09:40&#43;08:00'/><meta property='article:modified_time' content='2017-10-29T11:09:40&#43;08:00'/><meta name='twitter:card' content='summary'>
 
 <meta name="generator" content="Hugo 0.30.2" />
 
-  <title>Postscript ⋆ Sytrumics</title>
-  <link rel='canonical' href='http://www.example.com/blog/postscript/'>
+  <title>Dtrace in linux ⋆ Sytrumics</title>
+  <link rel='canonical' href='http://www.example.com/blog/dtrace/'>
   
   
   <link rel='icon' href='/favicon.ico'>
@@ -65,7 +61,7 @@
     <header class='header-container'>
   <div class='header entry-header'>
     <div class='header-info'>
-      <h1 class='title'>Postscript</h1>
+      <h1 class='title'>Dtrace in linux</h1>
       
 
     </div>
@@ -80,7 +76,7 @@
   
 </svg>
 <span class='screen-reader'>Posted on </span>
-  <time class='date' datetime='2017-01-01T19:49:49&#43;08:00'>2017, Jan 01</time>
+  <time class='date' datetime='2017-10-29T11:09:40&#43;08:00'>2017, Oct 29</time>
 </span>
 
   
@@ -107,28 +103,24 @@ One min read
     <div class='entry-content'>
   
 
-<h1 id="postscript">Postscript</h1>
+<h1 id="dtrace的由来">dtrace的由来</h1>
 
-<h2 id="如何在linux上使用">如何在Linux上使用</h2>
-
-<p>Postscript本归Adobe公司所有，但后来也有了开源的程序可以解释类似的语言，就是<code>ghostscript</code>。只要安装过<code>tex</code>一些套件，系统中就会有<code>gs</code>这个程序，命令行输入<code>gs</code>，就进入了<code>postscript</code>的解释器，可以完成代码输入与验证。</p>
-
-<h2 id="基本概念">基本概念</h2>
-
-<p>这是一个图灵完备的语言（大家都这么说，没有验证过），也有常见的编程概念，比如运算、过程定义、变量等。</p>
-
-<ol>
-<li>基于栈</li>
-<li>后缀表达式</li>
-<li>内建的字体接口</li>
-</ol>
+<p>听过一些八卦，意思是Sun的Solaris有很多杀手级的特点，比如说ZFS，还有一个就是DTrace，这些特点都让Linux的玩家们羡慕不已。DTrace可以在运行时注入一段自定义代码来完成某些信息的搜集和处理，而且这段代码是可以被验证的，可以保证不会损害系统的安全性。</p>
 
 </div>
 
     
 <footer class='entry-footer-container'>
   <div class='entry-footer'>
+  <div class='categories'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/program'>Program</a>, <a class='category' href='/categories/linux'>Linux</a></div>
+
   </div>
 </footer>
 
@@ -137,7 +129,7 @@ One min read
   
 <nav class='entry-nav-container'>
   <div class='entry-nav'><div class='prev-entry'>
-      <a href='/blog/jiaxiang/'>
+      <a href='/blog/postscript/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -145,17 +137,7 @@ One min read
   
 </svg>
  Previous</span>
-        <span class='screen-reader'>Previous post: </span>贾想</a>
-    </div><div class='next-entry'>
-      <a href='/blog/dtrace/'>
-        <span class='screen-reader'>Next post: </span>Dtrace in linux<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
+        <span class='screen-reader'>Previous post: </span>Postscript</a>
     </div></div>
 </nav>
 

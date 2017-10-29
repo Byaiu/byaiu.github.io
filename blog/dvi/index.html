@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Device indenpent file format Wikipedia
+DVI最初设计的时候，就是为了让机器读起来方便。用Knuth的话说，DVI文件就是一系列机器能够读懂的指令。每个指令的开头是一个8-bit的opcode，后面接着参数(0个或者多个都可以)。举个例子：从0x00到0x7F的opcode叫 set_char_i，会打印单个字符，然后将cursor向右移动一个字符宽度。而0xF7的opcode，叫 pre，需要至少14个byte的参数，还有多达255byte的可选comment。（pre是preamble的缩写，一个DVI文件必须以这个opcode开头）
+总的来讲，DVI文件由
+ 一个preamble 多个pages 一个postamble  组成。在DVI的解析中，有6个有符号的32-bit整数作为状态变量表示当前的解析过程。这六个就是(h,v,w,x,y,z)，h和v是当前位置相对于页面左上角的位移，w和x控制着水平方向的空白间距值，y和z控制着垂直方向的间距值。
+当前的字体是存放在f变量里的，这也是一个有符号的数，在一些情况下，对f的处理和对(h,v,w,x,y,z)不太一样。六元组是可以被push和pop(都是opcode)到栈里的，而f则不会。字体的宽度高度信息都要从TFM文件中拿来，而且字体并不会放在DVI文件里，字体在DVI文件里只是一个整数，而fnt_defi会定义这个数字具体是多少。f可以携带最多4个byte的整数，但Tex只会产生0-255之间的数。'>
+
+<meta property='og:title' content='DVI format ⋆ Sytrumics'>
+<meta property='og:description' content='Device indenpent file format Wikipedia
+DVI最初设计的时候，就是为了让机器读起来方便。用Knuth的话说，DVI文件就是一系列机器能够读懂的指令。每个指令的开头是一个8-bit的opcode，后面接着参数(0个或者多个都可以)。举个例子：从0x00到0x7F的opcode叫 set_char_i，会打印单个字符，然后将cursor向右移动一个字符宽度。而0xF7的opcode，叫 pre，需要至少14个byte的参数，还有多达255byte的可选comment。（pre是preamble的缩写，一个DVI文件必须以这个opcode开头）
+总的来讲，DVI文件由
+ 一个preamble 多个pages 一个postamble  组成。在DVI的解析中，有6个有符号的32-bit整数作为状态变量表示当前的解析过程。这六个就是(h,v,w,x,y,z)，h和v是当前位置相对于页面左上角的位移，w和x控制着水平方向的空白间距值，y和z控制着垂直方向的间距值。
+当前的字体是存放在f变量里的，这也是一个有符号的数，在一些情况下，对f的处理和对(h,v,w,x,y,z)不太一样。六元组是可以被push和pop(都是opcode)到栈里的，而f则不会。字体的宽度高度信息都要从TFM文件中拿来，而且字体并不会放在DVI文件里，字体在DVI文件里只是一个整数，而fnt_defi会定义这个数字具体是多少。f可以携带最多4个byte的整数，但Tex只会产生0-255之间的数。'>
+<meta property='og:url' content='http://www.example.com/blog/dvi/'>
+<meta property='og:site_name' content='Sytrumics'>
+<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:published_time' content='2016-11-28T08:32:58&#43;08:00'/><meta property='article:modified_time' content='2016-11-28T08:32:58&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+  <title>DVI format ⋆ Sytrumics</title>
+  <link rel='canonical' href='http://www.example.com/blog/dvi/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-blog'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/blog/'>Blog</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Sytrumics</p>
+          
+          <p class='site-description subtitle'>Hi, welcome to my blog.</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>DVI format</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2016-11-28T08:32:58&#43;08:00'>2016, Nov 28</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+One min read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<h1 id="device-indenpent-file-format">Device indenpent file format</h1>
+
+<p><a href="https://en.wikipedia.org/wiki/Device_independent_file_format" target="_blank">Wikipedia</a></p>
+
+<p>DVI最初设计的时候，就是为了让机器读起来方便。用Knuth的话说，DVI文件就是一系列机器能够读懂的指令。每个指令的开头是一个8-bit的opcode，后面接着参数(0个或者多个都可以)。举个例子：从0x00到0x7F的opcode叫 <code>set_char_i</code>，会打印单个字符，然后将cursor向右移动一个字符宽度。而0xF7的opcode，叫 <code>pre</code>，需要至少14个byte的参数，还有多达255byte的可选comment。（<code>pre</code>是<code>preamble</code>的缩写，一个DVI文件必须以这个opcode开头）</p>
+
+<p>总的来讲，DVI文件由</p>
+
+<ol>
+<li>一个preamble</li>
+<li>多个pages</li>
+<li>一个postamble</li>
+</ol>
+
+<p>组成。在DVI的解析中，有6个有符号的32-bit整数作为状态变量表示当前的解析过程。这六个就是<code>(h,v,w,x,y,z)</code>，<code>h</code>和<code>v</code>是当前位置相对于页面左上角的位移，<code>w</code>和<code>x</code>控制着水平方向的空白间距值，<code>y</code>和<code>z</code>控制着垂直方向的间距值。</p>
+
+<p>当前的字体是存放在<code>f</code>变量里的，这也是一个有符号的数，在一些情况下，对<code>f</code>的处理和对<code>(h,v,w,x,y,z)</code>不太一样。六元组是可以被<code>push</code>和<code>pop</code>(都是opcode)到栈里的，而<code>f</code>则不会。字体的宽度高度信息都要从<code>TFM</code>文件中拿来，而且字体并不会放在DVI文件里，字体在DVI文件里只是一个整数，而<code>fnt_defi</code>会定义这个数字具体是多少。<code>f</code>可以携带最多4个byte的整数，但<code>Tex</code>只会产生0-255之间的数。</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/blog/latex/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Latex</a>
+    </div><div class='next-entry'>
+      <a href='/blog/jiaxiang/'>
+        <span class='screen-reader'>Next post: </span>贾想<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/byaiu' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:byaiuwd@outlook.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+      Byaiu &copy; 2017 Sytrumic 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

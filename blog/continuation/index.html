@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Continuation 在看Racket时，其文档的Tutorial中有一个场景对于理解Continuation很有帮助，但是挺难的。在这里把这个全文翻译一下，加深理解。
+一个web-server中，常常会遇到一个Racket中比较高级的概念：continuation。事实上，这里需要delimited continuations，这已经在Racket中提供了。
+需要用到这种机制的起因是这样的：如果要完成某个事务，可能需要提交多次请求。通常来说，在客户端采用Ajax异步访问是比较正确的解决方案，但如果能结合后端，也是一种比较好的方案。
+随着每次事务需要的参数越来越多，使用通过query提交参数参数的方法来记住之前选项就变得麻烦起来。我们可以这样做：建立2个servlet，用form里的hidden字段来记住第一次的数字：
+(define (sum query) (build-request-page &#34;First number:&#34; &#34;/one&#34; &#34;&#34;)) (define (one query) (build-request-page &#34;Second number:&#34; &#34;/two&#34; (cdr (assq &#39;number query)))) (define (two query) (let ([n (string-&gt;number (cdr (assq &#39;hidden query)))] [m (string-&gt;number (cdr (assq &#39;number query)))]) `(html (body &#34;The sum is &#34; ,(number-&gt;string (&#43; m n)))))) (hash-set! dispatch-table &#34;sum&#34; sum) (hash-set! dispatch-table &#34;one&#34; one) (hash-set! dispatch-table &#34;two&#34; two) 这种方案当然是可行的，但是也可以用一种更加简洁的方式实现：
+(define (sum2 query) (define m (get-number &#34;First number:&#34;)) (define n (get-number &#34;Second number:&#34;)) `(html (body &#34;The sum is &#34; ,(number-&gt;string (&#43; m n))))) (hash-set!'>
+
+<meta property='og:title' content='Continuation ⋆ Sytrumics'>
+<meta property='og:description' content='Continuation 在看Racket时，其文档的Tutorial中有一个场景对于理解Continuation很有帮助，但是挺难的。在这里把这个全文翻译一下，加深理解。
+一个web-server中，常常会遇到一个Racket中比较高级的概念：continuation。事实上，这里需要delimited continuations，这已经在Racket中提供了。
+需要用到这种机制的起因是这样的：如果要完成某个事务，可能需要提交多次请求。通常来说，在客户端采用Ajax异步访问是比较正确的解决方案，但如果能结合后端，也是一种比较好的方案。
+随着每次事务需要的参数越来越多，使用通过query提交参数参数的方法来记住之前选项就变得麻烦起来。我们可以这样做：建立2个servlet，用form里的hidden字段来记住第一次的数字：
+(define (sum query) (build-request-page &#34;First number:&#34; &#34;/one&#34; &#34;&#34;)) (define (one query) (build-request-page &#34;Second number:&#34; &#34;/two&#34; (cdr (assq &#39;number query)))) (define (two query) (let ([n (string-&gt;number (cdr (assq &#39;hidden query)))] [m (string-&gt;number (cdr (assq &#39;number query)))]) `(html (body &#34;The sum is &#34; ,(number-&gt;string (&#43; m n)))))) (hash-set! dispatch-table &#34;sum&#34; sum) (hash-set! dispatch-table &#34;one&#34; one) (hash-set! dispatch-table &#34;two&#34; two) 这种方案当然是可行的，但是也可以用一种更加简洁的方式实现：
+(define (sum2 query) (define m (get-number &#34;First number:&#34;)) (define n (get-number &#34;Second number:&#34;)) `(html (body &#34;The sum is &#34; ,(number-&gt;string (&#43; m n))))) (hash-set!'>
+<meta property='og:url' content='http://www.example.com/blog/continuation/'>
+<meta property='og:site_name' content='Sytrumics'>
+<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:published_time' content='2016-11-23T20:44:28&#43;08:00'/><meta property='article:modified_time' content='2016-11-23T20:44:28&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+  <title>Continuation ⋆ Sytrumics</title>
+  <link rel='canonical' href='http://www.example.com/blog/continuation/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-blog'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/blog/'>Blog</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Sytrumics</p>
+          
+          <p class='site-description subtitle'>Hi, welcome to my blog.</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Continuation</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2016-11-23T20:44:28&#43;08:00'>2016, Nov 23</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+One min read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<h1 id="continuation">Continuation</h1>
+
+<p>在看Racket时，其文档的Tutorial中有一个场景对于理解Continuation很有帮助，但是挺难的。在这里把这个全文翻译一下，加深理解。</p>
+
+<p>一个web-server中，常常会遇到一个Racket中比较高级的概念：continuation。事实上，这里需要<code>delimited continuations</code>，这已经在Racket中提供了。</p>
+
+<p>需要用到这种机制的起因是这样的：如果要完成某个事务，可能需要提交多次请求。通常来说，在客户端采用Ajax异步访问是比较正确的解决方案，但如果能结合后端，也是一种比较好的方案。</p>
+
+<p>随着每次事务需要的参数越来越多，使用通过<code>query</code>提交参数参数的方法来记住之前选项就变得麻烦起来。我们可以这样做：建立2个servlet，用form里的hidden字段来记住第一次的数字：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#66d9ef">define </span>(sum query)
+  (build-request-page <span style="color:#e6db74">&#34;First number:&#34;</span> <span style="color:#e6db74">&#34;/one&#34;</span> <span style="color:#e6db74">&#34;&#34;</span>))
+(<span style="color:#66d9ef">define </span>(one query)
+      (build-request-page
+          <span style="color:#e6db74">&#34;Second number:&#34;</span>
+          <span style="color:#e6db74">&#34;/two&#34;</span>
+          (cdr (assq <span style="color:#e6db74">&#39;number</span> query))))
+
+(<span style="color:#66d9ef">define </span>(two query)
+    (<span style="color:#66d9ef">let </span>([n (string-&gt;number (cdr (assq <span style="color:#e6db74">&#39;hidden</span> query)))]
+          [m (string-&gt;number (cdr (assq <span style="color:#e6db74">&#39;number</span> query)))])
+       <span style="color:#f92672">`</span>(html (body <span style="color:#e6db74">&#34;The sum is &#34;</span> <span style="color:#f92672">,</span>(number-&gt;string (+ m n))))))
+
+(hash-set! dispatch-table <span style="color:#e6db74">&#34;sum&#34;</span> sum)
+(hash-set! dispatch-table <span style="color:#e6db74">&#34;one&#34;</span> one)
+(hash-set! dispatch-table <span style="color:#e6db74">&#34;two&#34;</span> two)</code></pre></div>
+<p>这种方案当然是可行的，但是也可以用一种更加简洁的方式实现：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#66d9ef">define </span>(sum2 query)
+  (<span style="color:#66d9ef">define </span>m (get-number <span style="color:#e6db74">&#34;First number:&#34;</span>))
+  (<span style="color:#66d9ef">define </span>n (get-number <span style="color:#e6db74">&#34;Second number:&#34;</span>))
+    <span style="color:#f92672">`</span>(html (body <span style="color:#e6db74">&#34;The sum is &#34;</span> <span style="color:#f92672">,</span>(number-&gt;string (+ m n)))))
+
+(hash-set! dispatch-table <span style="color:#e6db74">&#34;sum2&#34;</span> sum2)</code></pre></div>
+<p>这时候问题来了，<code>get-number</code>需要返回一个HTML response，还必须要再得到一个新的请求。这也就意味着，它应该把<code>build-request-page</code>产生的页面转化成一个<code>query</code>：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#66d9ef">define </span>(get-number label)
+    (<span style="color:#66d9ef">define </span>query
+      <span style="color:#f92672">...</span> (build-request-page label <span style="color:#f92672">...</span>) <span style="color:#f92672">...</span>)
+    (number-&gt;string (cdr (assq <span style="color:#e6db74">&#39;number</span> query))))</code></pre></div>
+<p>使用<code>continuation</code>可以实现这样一个<code>send/suspend</code>。在<code>send/suspend</code>中，首先会产生一个代表当前连接上下文的URL，捕获到一个<code>continuation</code>之中。接下来，这个URL会被传给一个产生<code>query</code>页面的过程，此次连接就把该页面返回，需要注意的是，我们捕获的那个计算场景已经被停止了，但是它依旧存在着。<code>send/suspend</code>还需要做一些事情来让之前终止的过程继续被调用，实现方法为：安插了一个会指向签名产生的URL的请求，在那个请求里会恢复计算。</p>
+
+<p><code>get-number</code>的实现如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#66d9ef">define </span>(get-number label)
+    (<span style="color:#66d9ef">define </span>query
+      <span style="color:#75715e">; Generate a URL for the current computation:</span>
+      (send/suspend
+          <span style="color:#75715e">; Receive the computation-as-URL here:</span>
+          (<span style="color:#66d9ef">lambda </span>(k-url)
+              <span style="color:#75715e">; Generate the query-page result for this connection.</span>
+              <span style="color:#75715e">; Send the query result to the saved-computation URL:</span>
+              (build-request-page label k-url <span style="color:#e6db74">&#34;&#34;</span>))))
+    <span style="color:#75715e">; We arrive here later, in a new connection</span>
+    (string-&gt;number (cdr (assq <span style="color:#e6db74">&#39;number</span> query))))</code></pre></div>
+<p>此时还需要实现<code>send/suspend</code>。我们使用<code>prompt</code>来标记servlet开始的地方，然后才可以使计算停在那里。因此，我们会用<code>prompt</code>把对<code>dispatch</code>的调用包住。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#66d9ef">define </span>(handle in out)
+  <span style="color:#f92672">....</span>
+  (<span style="color:#66d9ef">let </span>([xexpr (prompt (dispatch (list-ref req <span style="color:#ae81ff">1</span>)))])
+    <span style="color:#f92672">....</span>))</code></pre></div>
+<p>到了实现<code>send/suspend</code>的时候啦。<code>call/cc</code>可以捕获当前的计算环境到一个标识符<code>k</code>上，做了想要做的事情之后，要中断<code>abort</code>当前的计算环境。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#66d9ef">define </span>(send/suspend mk-page)
+  (let/cc k
+      (<span style="color:#66d9ef">define </span>tag (format <span style="color:#e6db74">&#34;k~a&#34;</span> (current-inexact-milliseconds)))
+      (hash-set! dispatch-table tag k)
+      (abort (mk-page (string-append <span style="color:#e6db74">&#34;/&#34;</span> tag)))))</code></pre></div>
+<p>每当用户提交表单，handler就会把这个old url对应的处理过程存储成一个continuation放在dispatch table里。下次通过产生的随机url通过dispat table访问到这个handler时，就可以调用这个<code>continuation</code>延续之前的计算。</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/blog/functional/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Python Functional Programming</a>
+    </div><div class='next-entry'>
+      <a href='/blog/awk/'>
+        <span class='screen-reader'>Next post: </span>AWK数据处理<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/byaiu' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:byaiuwd@outlook.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+      Byaiu &copy; 2017 Sytrumic 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

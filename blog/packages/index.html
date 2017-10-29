@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='argparse:命令行解析 import argparse def parse_option(): parser = argparse.ArgumentParser() parser.add_argument(&#34;--dbname&#34;, help=&#34;Minumum size of packets&#34;, default=&#39;output&#39;) parser.add_argument(&#34;--start&#34;, help = &#34;The simulation start number of ue&#34;, type = int, default = 1 ) parser.add_argument(&#34;--truerun&#34;, help = &#34;Truely run the protram&#34;, action = &#39;store_true&#39;, default = False) parser.add_argument(&#34;--simTime&#34;, help = &#34;Simulation Time&#34;, type=int, default = 10) args = parser.parse_args() return args def main(): option = parse_option() print(option.dbname) print(option.simTime) print(option.'>
+
+<meta property='og:title' content='Useful Python Package ⋆ Sytrumics'>
+<meta property='og:description' content='argparse:命令行解析 import argparse def parse_option(): parser = argparse.ArgumentParser() parser.add_argument(&#34;--dbname&#34;, help=&#34;Minumum size of packets&#34;, default=&#39;output&#39;) parser.add_argument(&#34;--start&#34;, help = &#34;The simulation start number of ue&#34;, type = int, default = 1 ) parser.add_argument(&#34;--truerun&#34;, help = &#34;Truely run the protram&#34;, action = &#39;store_true&#39;, default = False) parser.add_argument(&#34;--simTime&#34;, help = &#34;Simulation Time&#34;, type=int, default = 10) args = parser.parse_args() return args def main(): option = parse_option() print(option.dbname) print(option.simTime) print(option.'>
+<meta property='og:url' content='http://www.example.com/blog/packages/'>
+<meta property='og:site_name' content='Sytrumics'>
+<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:published_time' content='2016-10-27T19:49:49&#43;08:00'/><meta property='article:modified_time' content='2016-10-27T19:49:49&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+  <title>Useful Python Package ⋆ Sytrumics</title>
+  <link rel='canonical' href='http://www.example.com/blog/packages/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-blog'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/blog/'>Blog</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Sytrumics</p>
+          
+          <p class='site-description subtitle'>Hi, welcome to my blog.</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Useful Python Package</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2016-10-27T19:49:49&#43;08:00'>2016, Oct 27</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+One min read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<h2 id="argparse-命令行解析">argparse:命令行解析</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> argparse
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">parse_option</span>():
+    parser <span style="color:#f92672">=</span> argparse<span style="color:#f92672">.</span>ArgumentParser()
+    
+    parser<span style="color:#f92672">.</span>add_argument(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;--dbname&#34;</span>, 
+                        help<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;Minumum size of packets&#34;</span>,
+                        default<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#39;output&#39;</span>)
+    parser<span style="color:#f92672">.</span>add_argument(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;--start&#34;</span>, 
+                        help <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;The simulation start number of ue&#34;</span>,
+                        type <span style="color:#f92672">=</span> int,
+                        default <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> )
+    parser<span style="color:#f92672">.</span>add_argument(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;--truerun&#34;</span>,
+                        help <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;Truely run the protram&#34;</span>,
+                        action <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;store_true&#39;</span>,
+                        default <span style="color:#f92672">=</span> False)
+    parser<span style="color:#f92672">.</span>add_argument(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;--simTime&#34;</span>,
+                        help <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;Simulation Time&#34;</span>,
+                        type<span style="color:#f92672">=</span>int,
+                        default <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>)
+    args <span style="color:#f92672">=</span> parser<span style="color:#f92672">.</span>parse_args()
+    <span style="color:#66d9ef">return</span> args
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+    option <span style="color:#f92672">=</span> parse_option()
+    <span style="color:#66d9ef">print</span>(option<span style="color:#f92672">.</span>dbname)
+    <span style="color:#66d9ef">print</span>(option<span style="color:#f92672">.</span>simTime)
+    <span style="color:#66d9ef">print</span>(option<span style="color:#f92672">.</span>start)</code></pre></div>
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/blog/systemd/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Systemd</a>
+    </div><div class='next-entry'>
+      <a href='/blog/racket/'>
+        <span class='screen-reader'>Next post: </span>Racket<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/byaiu' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:byaiuwd@outlook.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+      Byaiu &copy; 2017 Sytrumic 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

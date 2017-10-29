@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blog on Sytrumics</title>
+    <link>http://www.example.com/blog/</link>
+    <description>Recent content in Blog on Sytrumics</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 29 Oct 2017 11:09:40 +0800</lastBuildDate>
+    
+	<atom:link href="http://www.example.com/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Dtrace in linux</title>
+      <link>http://www.example.com/blog/dtrace/</link>
+      <pubDate>Sun, 29 Oct 2017 11:09:40 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/dtrace/</guid>
+      <description>dtrace on linux 这一段时间在Intel实习，做Linux相关的事情。</description>
+    </item>
+    
+    <item>
+      <title>Postscript</title>
+      <link>http://www.example.com/blog/postscript/</link>
+      <pubDate>Sun, 01 Jan 2017 19:49:49 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/postscript/</guid>
+      <description> Postscript 如何在Linux上使用 Postscript本归Adobe公司所有，但后来也有了开源的程序可以解释类似的语言，就是ghostscript。只要安装过tex一些套件，系统中就会有gs这个程序，命令行输入gs，就进入了postscript的解释器，可以完成代码输入与验证。
+基本概念 这是一个图灵完备的语言（大家都这么说，没有验证过），也有常见的编程概念，比如运算、过程定义、变量等。
+ 基于栈 后缀表达式 内建的字体接口  </description>
+    </item>
+    
+    <item>
+      <title>贾想</title>
+      <link>http://www.example.com/blog/jiaxiang/</link>
+      <pubDate>Fri, 30 Dec 2016 16:52:28 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/jiaxiang/</guid>
+      <description>我已经记不起来第一次看贾樟柯电影的时候了，是哪一部也不知道了，可能是天注定，也可能是站台。他最开始拍的几部电影里的场景很契合我小时候对世界、对大人们的印象，可能是由于他也是山西人而且恰好和我的父亲处于同一年龄。第一次看到小武，我竟然同时想到了我姨姨家的表弟，还有我的父亲，感觉小武就是我表弟穿越回去，穿了我爸的那套西服在街上溜达。我仔细回想了表弟的长相、身材和气质，还有家中父亲年轻时穿西装的照片，顿时觉得这电影拍的就是我年幼时的世界。后来一看拍摄年月和地点，嗯，，难怪。
+汾阳是离石市下面的一个县，但距离太原更近一些。而在2000年前，离石市还叫吕梁地区，这个地区有9个县在吕梁山上，交通不便，包括离石；还有4个县在太原盆地旁边的平原上，汾阳就是这4个里面的一个，所以看贾想的时候，里面会提到太原而不是离石。站台的拍摄时间与我上小学一年级的时间是一样的。不知道其他人看到站台里的背景是怎样的感觉，但那是我从小每天发呆时就面对的场面，所以他前面拍的那几部电影一下就把我拉到了那种情绪里，</description>
+    </item>
+    
+    <item>
+      <title>DVI format</title>
+      <link>http://www.example.com/blog/dvi/</link>
+      <pubDate>Mon, 28 Nov 2016 08:32:58 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/dvi/</guid>
+      <description>Device indenpent file format Wikipedia
+DVI最初设计的时候，就是为了让机器读起来方便。用Knuth的话说，DVI文件就是一系列机器能够读懂的指令。每个指令的开头是一个8-bit的opcode，后面接着参数(0个或者多个都可以)。举个例子：从0x00到0x7F的opcode叫 set_char_i，会打印单个字符，然后将cursor向右移动一个字符宽度。而0xF7的opcode，叫 pre，需要至少14个byte的参数，还有多达255byte的可选comment。（pre是preamble的缩写，一个DVI文件必须以这个opcode开头）
+总的来讲，DVI文件由
+ 一个preamble 多个pages 一个postamble  组成。在DVI的解析中，有6个有符号的32-bit整数作为状态变量表示当前的解析过程。这六个就是(h,v,w,x,y,z)，h和v是当前位置相对于页面左上角的位移，w和x控制着水平方向的空白间距值，y和z控制着垂直方向的间距值。
+当前的字体是存放在f变量里的，这也是一个有符号的数，在一些情况下，对f的处理和对(h,v,w,x,y,z)不太一样。六元组是可以被push和pop(都是opcode)到栈里的，而f则不会。字体的宽度高度信息都要从TFM文件中拿来，而且字体并不会放在DVI文件里，字体在DVI文件里只是一个整数，而fnt_defi会定义这个数字具体是多少。f可以携带最多4个byte的整数，但Tex只会产生0-255之间的数。</description>
+    </item>
+    
+    <item>
+      <title>Latex</title>
+      <link>http://www.example.com/blog/latex/</link>
+      <pubDate>Sat, 26 Nov 2016 19:49:49 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/latex/</guid>
+      <description>Latex Wiki book是一本对Latex解释很详尽的在线电子书，以下内容来自对这本书的学习。
+\input与\include 用\include和\input都可以将另一个文件引入现在正在编译的文件，使用的时候均可省略后缀。不同之处在于：
+ \include是不可以叠加的，意思是用\include包含进来的文件不可以包含\include。而\input不受限制。 \include会引入新的一页，\input不会  因此，\include适用于顶层文件的组织，而\input可以用于不分页的情形。</description>
+    </item>
+    
+    <item>
+      <title>AWK数据处理</title>
+      <link>http://www.example.com/blog/awk/</link>
+      <pubDate>Fri, 25 Nov 2016 20:44:28 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/awk/</guid>
+      <description>有同学请我帮忙处理一个数据文件，里面有多个公司股价历史的文件（乱序排列），要求是编写一个程序(不限语言，但最好能在mac/linux下运行), 读取这个文件并返回增长最多的那只股票的名称及增值（输出到终端也可），需要注意的是数据中包含不规则的无效数据。
+这是一个CSV文件，这里截取了前几行：
+   Name Date notes Value Change     PGC 2015-11-7 notes 600.61 INCREASED   RHS 2015-10-5 notes 202.97 DECREASED   KCT 2015-7-20 notes 914.96 NEW   DLV 2015-9-12 notes 479.16 DECREASED   ABU 2015-8-19 notes 725.18 DECREASED   WHJ 2015-7-14 notes 795.78 DECREASED   ARA 2015-8-12 notes 470.80 INCREASED   WYO 2015-8-3 notes &amp;ndash; UNKNOWN    文件并不大，1M都不到，用Excel来处理完全是绰绰有余。但确实提出来了在Linux下的需求，是不是用一个Python脚本呢？如果是的话，思路也很清晰。Python自带了CSV的解析库，只需要做一个简单的List的filter和sort，再加一点逻辑就可以了。</description>
+    </item>
+    
+    <item>
+      <title>Continuation</title>
+      <link>http://www.example.com/blog/continuation/</link>
+      <pubDate>Wed, 23 Nov 2016 20:44:28 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/continuation/</guid>
+      <description>Continuation 在看Racket时，其文档的Tutorial中有一个场景对于理解Continuation很有帮助，但是挺难的。在这里把这个全文翻译一下，加深理解。
+一个web-server中，常常会遇到一个Racket中比较高级的概念：continuation。事实上，这里需要delimited continuations，这已经在Racket中提供了。
+需要用到这种机制的起因是这样的：如果要完成某个事务，可能需要提交多次请求。通常来说，在客户端采用Ajax异步访问是比较正确的解决方案，但如果能结合后端，也是一种比较好的方案。
+随着每次事务需要的参数越来越多，使用通过query提交参数参数的方法来记住之前选项就变得麻烦起来。我们可以这样做：建立2个servlet，用form里的hidden字段来记住第一次的数字：
+(define (sum query) (build-request-page &amp;#34;First number:&amp;#34; &amp;#34;/one&amp;#34; &amp;#34;&amp;#34;)) (define (one query) (build-request-page &amp;#34;Second number:&amp;#34; &amp;#34;/two&amp;#34; (cdr (assq &amp;#39;number query)))) (define (two query) (let ([n (string-&amp;gt;number (cdr (assq &amp;#39;hidden query)))] [m (string-&amp;gt;number (cdr (assq &amp;#39;number query)))]) `(html (body &amp;#34;The sum is &amp;#34; ,(number-&amp;gt;string (+ m n)))))) (hash-set! dispatch-table &amp;#34;sum&amp;#34; sum) (hash-set! dispatch-table &amp;#34;one&amp;#34; one) (hash-set! dispatch-table &amp;#34;two&amp;#34; two) 这种方案当然是可行的，但是也可以用一种更加简洁的方式实现：
+(define (sum2 query) (define m (get-number &amp;#34;First number:&amp;#34;)) (define n (get-number &amp;#34;Second number:&amp;#34;)) `(html (body &amp;#34;The sum is &amp;#34; ,(number-&amp;gt;string (+ m n))))) (hash-set!</description>
+    </item>
+    
+    <item>
+      <title>Python Functional Programming</title>
+      <link>http://www.example.com/blog/functional/</link>
+      <pubDate>Wed, 23 Nov 2016 20:44:28 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/functional/</guid>
+      <description>List Comprehension 列表解析式对于减少代码行数有着意想不到的作用。列表解析式适用于多重循环中的选择，有助于减少变量的名字，而且让逻辑更加清晰。
+下面代码是在simiki g后执行的一段脚本，意图为把在content目录下的源文件中的图片拷贝到输出目录，这样在生成HTML时就能看到图片了。图片的筛选在列表解析式中完成，用到了多重循环加判断的方式，返回了(源目录，目标目录，文件名)，然后在一个简单的循环中完成所有的拷贝工作。
+def main(): join = os.path.join def is_pic(name): return name.split(&amp;#39;.&amp;#39;)[-1] in [&amp;#39;jpg&amp;#39;, &amp;#39;jpeg&amp;#39;, &amp;#39;svg&amp;#39;, &amp;#39;png&amp;#39;] images = [ (join(&amp;#39;content&amp;#39;, folder, topic), join(&amp;#39;output&amp;#39;, folder, topic), img) for folder in os.listdir(&amp;#39;content&amp;#39;) for topic in os.listdir(join(&amp;#39;content&amp;#39;, folder)) if topic == &amp;#39;pic&amp;#39; for img in os.listdir(join(&amp;#39;content&amp;#39;, folder, topic)) if is_pic(img)] for src, dst, name in images: os.makedirs(dst, mode = 0o777, exist_ok = True) shutil.copy(join(src, name), join(dst, name)) 其实真正的拷贝工作也可以定义一个函数real_copy(src, dst, name)，再map(real_copy, images)。这也算是函数式的一种应用。</description>
+    </item>
+    
+    <item>
+      <title>Hardware Related</title>
+      <link>http://www.example.com/blog/hardware/</link>
+      <pubDate>Wed, 23 Nov 2016 19:49:49 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/hardware/</guid>
+      <description>如何查看硬件信息 在系统重装或者升级之后，总会出现一些硬件支持问题。这时知道自己的机器里到底都有哪些型号的硬件就显得很有必要了。Source</description>
+    </item>
+    
+    <item>
+      <title>Qt</title>
+      <link>http://www.example.com/blog/qt/</link>
+      <pubDate>Wed, 23 Nov 2016 19:49:49 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/qt/</guid>
+      <description>Something about Qt Qt是作为一个GUI框架而映入眼帘的。初学Qt，有两个模块比较重要，Core和GUI，而这也是QT作为GUI的一个基石。
+Qt官方文档组织稍微有点奇怪，相对比较杂乱。不过鉴于Qt其实是一个一站式的开发平台，倒是可以理解的。对于稍微有经验的开发者，也不是急于上手项目，那么其实从Develoopment Topics看起是挺好的选择。
+推荐的顺序是Core -&amp;gt; User Interfaces -&amp;gt; Graphics。
+首先是要了解Qt对于编程的一些抽象和约定，这是Core要解决的问题；其次，我们使用Qt就是为了写用户界面，那么对于界面的编写需要有一些映像，此时就要学习User Interfaces，看了后最好能对QWidget和它的子类有一定的了解，并且掌握常用的控件和布局，并学习Qt里的“行话”&amp;ndash;Model/View, Drag and drop等等；在真正需要开发应用的时候，很有可能要自己定制控件，那么了解Graphics可以帮助我们学习如何画出一个自己想要的控件。
+Core 如果能在脑中建立起Qt中对各个组件的抽象，那么会对这个框架的运作了解深刻一些。在接触这样一个新的框架时，大概有这样几个疑问需要解答：
+ 这里都有什么东西？  在这个框架里最基本的东西是什么？就是一个个对象，它们被称为Object。所有的交互都是建立在这些粒子之上的。
+ 这些东西都是什么？
+ 这些粒子其实是需要被标识的，所以他们都会有名字。 它们也需要被组织起来，所以每个对象都会有父亲或者儿子。  它们都是怎样交互的？
+  这大概就是Qt最著名的Signal/Slot的用武之地。某个对象会发出Signal，然后与之关联的Slot就会被调用，他们之间完全不需要知道对方的存在。这给编程带来了非常好的解耦能力，要知道用在面向对象的编程风格中，拥有其他类的指针并且维护它们之间的关系是非常dirty的工作。
+对象系统 Identity Or Value 我们应当把Qt的每一个对象实例视为独一无二的存在，即Identity的意义所在。双胞胎可能看起来很像，他们可能是从同一个模子里出来的(Class)，但是他们有两个不同的ID(内存地址)。
+对象有什么能力  之间可以沟通 : Signal and slot 属性系统 : 每个类的实例都会带一些属性，可以进行存取、校验等 支持事件的传递等 自动内存管理 构建一个对象树，可以让Qt来帮助管理对象实例的生存周期  事件系统 单纯的看看我们是怎么把自己的意志传达给程序的。一般的电脑就只有鼠标+键盘，只要处理好这两个输入源，就能驱动我们的程序运行下去。把这些输入精确的映射到某段代码的执行，是由Qt这个框架完成的。
+ 某种输入(鼠标点击、键盘按下)是传给这个应用程序的，操作系统把一些raw data传给Qt，比如点击的坐标，按键值等 Qt把这些东西封装到一个类的实例中，这个类就是QEvent，再寻找传给哪个接收对象。 QObject都有event(QEvent *e)方法，Qt会调用对象的这个方法，表示传递到了这个对象，然后做什么由对象决定。 每个对象的event(QEvent *e)都是一个分派处，在这里，会根据QEvent的类型，调用一些虚函数。 所以，在自定义Widget时，要重写特定的虚函数，是为了让Qt能够最终调用到我们的逻辑。  再细究的话还有很多相关的处理机制，但是大体的流程就是上面所述。
+User Interface 在没有接触很多GUI编程的时候，对GUI中的基本元素还是有着一种隐约的敬畏之心的，觉得它们是操作系统提出来的原子类型，是很难改变的。但是稍加了解之后就会发现，这些都是画出来的！
+在Qt中，每种界面元素都是QWidget。而QWidget有一个方法叫paintEvent(QPaintEvent *)。每个Widget长什么样都是由这个方法的执行说了算的。有了这种想法垫底后，再思考一下平常看到的各种界面元素：Button\Label\Frame，其实也就没有太多的神秘了。大致了解一下常见的widgets，有助于稳定心绪。</description>
+    </item>
+    
+    <item>
+      <title>Django</title>
+      <link>http://www.example.com/blog/django/</link>
+      <pubDate>Fri, 11 Nov 2016 20:44:28 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/django/</guid>
+      <description> Common Issues Static Files  在一个App内建立appname/static/appname 模板文件开头使用{% load staticfiles %} 引用时，语法为{% static &amp;quot;apppname/something.css&amp;quot; %}  </description>
+    </item>
+    
+    <item>
+      <title>Elisp Concepts</title>
+      <link>http://www.example.com/blog/elisp/</link>
+      <pubDate>Mon, 31 Oct 2016 18:24:58 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/elisp/</guid>
+      <description>Lisp Data Types object: 一段内存中的数据，可以被Lisp程序操控
+type: 或者&amp;rdquo;data type&amp;rdquo;，是object的集合
+object至少属于一个type。
+Emacs内建一些“primitive types”，其他的type都是在这些type上构建出来的。大概包括如下一些：
+ integer float cons symbol string vector hash-table subr byte-code function 其他一些特殊type，比如&amp;rdquo;buffer&amp;rdquo;  Emacs中，object有其可打印的表示，还有输入表示。一般情况下，这两者是相同的，但是对一些不可读的object，它们的打印表示有点不同。一般都是类似#&amp;lt;buffer object.texi&amp;gt;。
+在Lisp中，对于Lisp interpreter来说，首先是读取expression的字面表示，产生一个lisp object；在evaluate这个lisp object。这两步是分开的。
+Editing Type buffer buffer存着可以被编辑的text，一般都来自磁盘文件。buffer要在window里展示。每个buffer里有一个&amp;rdquo;point&amp;rdquo;来保留着编辑的位置。每个buffer关联着这样一些数据结构：
+ local syntax table local keymap buffer-local variable binding的列表 overlays buffer里text的properties  buffer没有输入表示。
+Marker 代表buffer里的一个点。没有输入表示。
+Window 代表terminal screen上展示buffer的一个区域。任何时间只有一个selected-window.没有输入表示。
+有对应的 window configuration type。
+Frame 可以包含多个window。没有输入表示。
+有对应的 frame configuration type。
+Process type 可以理解为进程。没有输入表示。
+Stream type 和传统意义的流一样，可以读入，可以写出。marker，buffer，string等，都可以用作stream。
+Misc  overlay keymap font  Lists Sequences, Arrays, Vectors Hash Table Symbol *Symbol*是一个盒子，盒子里有4个格子，这4个格子分别装如下的东西：</description>
+    </item>
+    
+    <item>
+      <title>Grub2</title>
+      <link>http://www.example.com/blog/grub/</link>
+      <pubDate>Thu, 27 Oct 2016 20:44:28 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/grub/</guid>
+      <description> Grub2 笔记 有了GPT分区后，事情变得麻烦起来。 GPT分区解释
+GPT是后来才有的分区，所以要对之前已经存在的机制进行保护。使用GPT分区方 法时，一般要保留512M作为EFI System分区，而且挂载到boot，这个boot分区必 须是fat32格式的。之后Linux或者Windows的内核就放在这里面。
+Installation Grub2 使用GRUB grub-install来进行安装，这个grub-install是两个命令的 wrapper，grub-mkimage和grub-setup.
+MRB安装 在MBR和第一个分区之间往往还会有一段空闲的区域，MRB的某些部分可以放在这 里。也可以选择在之后的文件系统中安装，这些方法都有一定的局限。
+官方建议是把GRUB放在第一个分区之前的的间隙之中。这样做的话，就必须要保 证第一个分区之前有63个扇区(31KiB)。
+GPT安装 GPT是EFI所规定的一个部分。在软件支持的情况下，BIOS平台也可以用EFI分区。 这时候就需要给GRUB单独分出来一个分区，叫做BIOS Boot Partition，然后把 BIOS放在这个里面。
+需要注意的是，这个 BIOS Boot Partition 需要至少31KiB的空间。
+Booting </description>
+    </item>
+    
+    <item>
+      <title>Racket</title>
+      <link>http://www.example.com/blog/racket/</link>
+      <pubDate>Thu, 27 Oct 2016 19:49:49 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/racket/</guid>
+      <description>Racket Racket是一门让人很舒服的语言。作为Scheme，语言本身的概念也比较简单，其又扩充了很多功能，比如模块化的支持，合同，面向对象等，每种功能也比较小，而且知识边界比较清晰，上手不会非常的痛苦。
+As Scheme 自定义数据类型 struct 一般新的数据类型由struct关键词定义，class也可以，只是class也是建立在struct的基础上。
+数据定义的语法为：
+(struct struct-id (field-id ...)) ;; Example (struct posn (x y)) struct关键字会绑定一些东西到struct-id上：
+ 构造函数struct-id 判断函数struct-id?，用于判断是否为此类型 Field accessor struct-id-field-id，用于访问filed-id 产生一个用于描述此类型的值struct:struct-id  但是用struct定义数据并不会对其中的field作检查，对其类型的限制是通过contract来完成的。
+复制和更新 通过struct-copy可以得到新的实例，并且和之前的并不冲突。
+(struct-copy struct-id struct-expr [field-id expr] ...) 子类型 也可以用struct来定义一个structure subtype。
+(struct struct-id super-id (field-id ...)) 假设B继承自A， A中有一个field叫做f，从B是没办法用B-f来引用到f的，只能用A-f来引用。
+Opaque vs Transparent 字面意思上理解的话，一个是暴露自己的内部结构，一个是不暴露。用opaque的话，就隐藏自己的实现，不能reflection，也不能被打印出来。用transparent的话就不会这样了。不过，默认是opaque的。可以用如下方法来 改变这个属性。
+(struct posn (x y) #:transparent) 比较 一般用equal?来比较两个实例。如果实例是transparent的struct，那么会自动比较每个域，如果是opaque，则需要自定义一个#:methods 即 gen:equal+hash来定制比较的过程，这需要定义3个方法：
+ equal-proc hash-proc hash2-proc  Structure Type Generativity 只要struct被evaluate一次，就会产生一个新的类型。如果把struct的定义放在一个可以被多次调用的函数里，那么每次调用就都会产生一个新的类型。</description>
+    </item>
+    
+    <item>
+      <title>Useful Python Package</title>
+      <link>http://www.example.com/blog/packages/</link>
+      <pubDate>Thu, 27 Oct 2016 19:49:49 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/packages/</guid>
+      <description>argparse:命令行解析 import argparse def parse_option(): parser = argparse.ArgumentParser() parser.add_argument(&amp;#34;--dbname&amp;#34;, help=&amp;#34;Minumum size of packets&amp;#34;, default=&amp;#39;output&amp;#39;) parser.add_argument(&amp;#34;--start&amp;#34;, help = &amp;#34;The simulation start number of ue&amp;#34;, type = int, default = 1 ) parser.add_argument(&amp;#34;--truerun&amp;#34;, help = &amp;#34;Truely run the protram&amp;#34;, action = &amp;#39;store_true&amp;#39;, default = False) parser.add_argument(&amp;#34;--simTime&amp;#34;, help = &amp;#34;Simulation Time&amp;#34;, type=int, default = 10) args = parser.parse_args() return args def main(): option = parse_option() print(option.dbname) print(option.simTime) print(option.</description>
+    </item>
+    
+    <item>
+      <title>Systemd</title>
+      <link>http://www.example.com/blog/systemd/</link>
+      <pubDate>Thu, 27 Oct 2016 15:16:28 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/systemd/</guid>
+      <description>原理 并行 IBM Developer Works中有一篇对systemd的解释非常好。其中总结了并发启动的三个原理：
+ socket依赖 D-Bus依赖 文件系统的依赖  思想是类似的，把这些概念都单独的剥离出来，分为请求方-&amp;gt;实体(socket \ D-bus)-&amp;gt;处理方，可以在有请求时启动或者请求出现时进行缓存，从而达到请求方和处理方的并发启动。</description>
+    </item>
+    
+  </channel>
+</rss>

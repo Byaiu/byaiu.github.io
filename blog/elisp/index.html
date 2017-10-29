@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Lisp Data Types object: 一段内存中的数据，可以被Lisp程序操控
+type: 或者&rdquo;data type&rdquo;，是object的集合
+object至少属于一个type。
+Emacs内建一些“primitive types”，其他的type都是在这些type上构建出来的。大概包括如下一些：
+ integer float cons symbol string vector hash-table subr byte-code function 其他一些特殊type，比如&rdquo;buffer&rdquo;  Emacs中，object有其可打印的表示，还有输入表示。一般情况下，这两者是相同的，但是对一些不可读的object，它们的打印表示有点不同。一般都是类似#&lt;buffer object.texi&gt;。
+在Lisp中，对于Lisp interpreter来说，首先是读取expression的字面表示，产生一个lisp object；在evaluate这个lisp object。这两步是分开的。
+Editing Type buffer buffer存着可以被编辑的text，一般都来自磁盘文件。buffer要在window里展示。每个buffer里有一个&rdquo;point&rdquo;来保留着编辑的位置。每个buffer关联着这样一些数据结构：
+ local syntax table local keymap buffer-local variable binding的列表 overlays buffer里text的properties  buffer没有输入表示。
+Marker 代表buffer里的一个点。没有输入表示。
+Window 代表terminal screen上展示buffer的一个区域。任何时间只有一个selected-window.没有输入表示。
+有对应的 window configuration type。
+Frame 可以包含多个window。没有输入表示。
+有对应的 frame configuration type。
+Process type 可以理解为进程。没有输入表示。
+Stream type 和传统意义的流一样，可以读入，可以写出。marker，buffer，string等，都可以用作stream。
+Misc  overlay keymap font  Lists Sequences, Arrays, Vectors Hash Table Symbol *Symbol*是一个盒子，盒子里有4个格子，这4个格子分别装如下的东西：'>
+
+<meta property='og:title' content='Elisp Concepts ⋆ Sytrumics'>
+<meta property='og:description' content='Lisp Data Types object: 一段内存中的数据，可以被Lisp程序操控
+type: 或者&rdquo;data type&rdquo;，是object的集合
+object至少属于一个type。
+Emacs内建一些“primitive types”，其他的type都是在这些type上构建出来的。大概包括如下一些：
+ integer float cons symbol string vector hash-table subr byte-code function 其他一些特殊type，比如&rdquo;buffer&rdquo;  Emacs中，object有其可打印的表示，还有输入表示。一般情况下，这两者是相同的，但是对一些不可读的object，它们的打印表示有点不同。一般都是类似#&lt;buffer object.texi&gt;。
+在Lisp中，对于Lisp interpreter来说，首先是读取expression的字面表示，产生一个lisp object；在evaluate这个lisp object。这两步是分开的。
+Editing Type buffer buffer存着可以被编辑的text，一般都来自磁盘文件。buffer要在window里展示。每个buffer里有一个&rdquo;point&rdquo;来保留着编辑的位置。每个buffer关联着这样一些数据结构：
+ local syntax table local keymap buffer-local variable binding的列表 overlays buffer里text的properties  buffer没有输入表示。
+Marker 代表buffer里的一个点。没有输入表示。
+Window 代表terminal screen上展示buffer的一个区域。任何时间只有一个selected-window.没有输入表示。
+有对应的 window configuration type。
+Frame 可以包含多个window。没有输入表示。
+有对应的 frame configuration type。
+Process type 可以理解为进程。没有输入表示。
+Stream type 和传统意义的流一样，可以读入，可以写出。marker，buffer，string等，都可以用作stream。
+Misc  overlay keymap font  Lists Sequences, Arrays, Vectors Hash Table Symbol *Symbol*是一个盒子，盒子里有4个格子，这4个格子分别装如下的东西：'>
+<meta property='og:url' content='http://www.example.com/blog/elisp/'>
+<meta property='og:site_name' content='Sytrumics'>
+<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:published_time' content='2016-10-31T18:24:58&#43;08:00'/><meta property='article:modified_time' content='2016-10-31T18:24:58&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+  <title>Elisp Concepts ⋆ Sytrumics</title>
+  <link rel='canonical' href='http://www.example.com/blog/elisp/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-blog'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/blog/'>Blog</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Sytrumics</p>
+          
+          <p class='site-description subtitle'>Hi, welcome to my blog.</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Elisp Concepts</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2016-10-31T18:24:58&#43;08:00'>2016, Oct 31</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+3 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<h1 id="lisp-data-types">Lisp Data Types</h1>
+
+<p>object: 一段内存中的数据，可以被Lisp程序操控</p>
+
+<p>type: 或者&rdquo;data type&rdquo;，是object的集合</p>
+
+<p>object至少属于一个type。</p>
+
+<p>Emacs内建一些“primitive types”，其他的type都是在这些type上构建出来的。大概包括如下一些：</p>
+
+<ol>
+<li>integer</li>
+<li>float</li>
+<li>cons</li>
+<li>symbol</li>
+<li>string</li>
+<li>vector</li>
+<li>hash-table</li>
+<li>subr</li>
+<li>byte-code function</li>
+<li>其他一些特殊type，比如&rdquo;buffer&rdquo;</li>
+</ol>
+
+<p>Emacs中，object有其可打印的表示，还有输入表示。一般情况下，这两者是相同的，但是对一些不可读的object，它们的打印表示有点不同。一般都是类似<code>#&lt;buffer object.texi&gt;</code>。</p>
+
+<p>在Lisp中，对于Lisp interpreter来说，首先是读取expression的字面表示，产生一个lisp object；在evaluate这个lisp object。这两步是分开的。</p>
+
+<h2 id="editing-type">Editing Type</h2>
+
+<h3 id="buffer">buffer</h3>
+
+<p>buffer存着可以被编辑的text，一般都来自磁盘文件。buffer要在window里展示。每个buffer里有一个&rdquo;point&rdquo;来保留着编辑的位置。每个buffer关联着这样一些数据结构：</p>
+
+<ol>
+<li>local syntax table</li>
+<li>local keymap</li>
+<li>buffer-local variable binding的列表</li>
+<li>overlays</li>
+<li>buffer里text的properties</li>
+</ol>
+
+<p>buffer没有输入表示。</p>
+
+<h3 id="marker">Marker</h3>
+
+<p>代表buffer里的一个点。没有输入表示。</p>
+
+<h3 id="window">Window</h3>
+
+<p>代表terminal screen上展示buffer的一个区域。任何时间只有一个selected-window.没有输入表示。</p>
+
+<p>有对应的 window configuration type。</p>
+
+<h3 id="frame">Frame</h3>
+
+<p>可以包含多个window。没有输入表示。</p>
+
+<p>有对应的 frame configuration type。</p>
+
+<h3 id="process-type">Process type</h3>
+
+<p>可以理解为进程。没有输入表示。</p>
+
+<h3 id="stream-type">Stream type</h3>
+
+<p>和传统意义的流一样，可以读入，可以写出。marker，buffer，string等，都可以用作stream。</p>
+
+<h3 id="misc">Misc</h3>
+
+<ul>
+<li>overlay</li>
+<li>keymap</li>
+<li>font</li>
+</ul>
+
+<h2 id="lists">Lists</h2>
+
+<h2 id="sequences-arrays-vectors">Sequences, Arrays, Vectors</h2>
+
+<h2 id="hash-table">Hash Table</h2>
+
+<h1 id="symbol">Symbol</h1>
+
+<p>*Symbol*是一个盒子，盒子里有4个格子，这4个格子分别装如下的东西：</p>
+
+<ol>
+<li>symbol name，可以被打印出来</li>
+<li>symbol value</li>
+<li>作为function或者macro时的function object \ macro object</li>
+<li>属性列表</li>
+</ol>
+
+<p>macro和function是放在一个格子里的，但是他们的类型是不同的。定义它们的方法有以下两种。</p>
+
+<ol>
+<li><p>定义一个variable，放到了格子2：symbol value中。</p>
+
+<p><code>defvar</code>和<code>defconst</code>。这些都定义了全局变量。</p></li>
+
+<li><p>定义function或者macro，放到了格子3中。</p>
+
+<p><code>defun</code>和<code>defmacro</code></p></li>
+</ol>
+
+<p>通过<code>c-h v</code>查看某个Symbol的变量，通过<code>c-h f</code>查看某个Symbol绑定的函数或者宏。</p>
+
+<p>默认有一个<code>obarray</code>，所有的Symbol经过Hash后映射到这里，也可以自行提供<code>obarray</code>。一个<code>obarray</code>中不会有重复的名字，因此是一个全新的命名空间。</p>
+
+<p>而属性列表可以由下面的function操控。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elisp" data-lang="elisp">(<span style="color:#a6e22e">put</span> <span style="color:#e6db74">&#39;fly</span> <span style="color:#e6db74">&#39;verb</span> <span style="color:#e6db74">&#39;transitive</span>)
+(<span style="color:#a6e22e">setplist</span> <span style="color:#e6db74">&#39;foo</span> <span style="color:#f92672">&#39;</span>(a <span style="color:#ae81ff">1</span> b (<span style="color:#ae81ff">2</span> <span style="color:#ae81ff">3</span>) c <span style="color:#66d9ef">nil</span>))
+(<span style="color:#a6e22e">symbol-plist</span> <span style="color:#e6db74">&#39;foo</span>)</code></pre></div>
+<h2 id="variable">Variable</h2>
+
+<p>Symbol代表了variable，然后Symbol的名字就是variable的名字，variable的值存在了symbol的value格子里。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lisp" data-lang="lisp"><span style="color:#75715e">;; 定义一个symbol的variable</span>
+(setq x <span style="color:#f92672">&#39;</span>(a b))
+
+<span style="color:#75715e">;; 定义全局变量</span>
+(defvar bar <span style="color:#ae81ff">23</span>
+  <span style="color:#e6db74">&#34;The normal weight of a bar.&#34;</span>)
+<span style="color:#75715e">;; 不过defconst并未真正指定为const，它还是可以修改的。</span>
+(defconst float-pi <span style="color:#ae81ff">3.141592653589793</span> <span style="color:#e6db74">&#34;The value of Pi.&#34;</span>)
+<span style="color:#75715e">;; nil, t, 以: 开头的Symbol不可以被赋值</span>
+
+
+<span style="color:#75715e">;; 用symbol-value来取得value格子里的值</span>
+(symbol-value <span style="color:#e6db74">&#39;asdf</span>)
+
+<span style="color:#75715e">;; setq 和 set</span>
+<span style="color:#75715e">;; setq 不对第一个参数求值。 是一个special form</span>
+<span style="color:#75715e">;; set 先对第一个参数求值，得到一个symbol，再设置其值。是一个function</span>
+
+<span style="color:#75715e">;; 局部变量由let, let*来绑定</span>
+(let ((y <span style="color:#ae81ff">1</span>)
+      (z y)))
+(let* ((y <span style="color:#ae81ff">1</span>)
+       (z y)))
+
+<span style="color:#75715e">;; 如果这个symbol的value格子里没东西，那么这个variable就是void</span>
+<span style="color:#75715e">;; (makeunbond symbol) 清空value格子里的东西</span>
+<span style="color:#75715e">;; (boundp symbol) 判断value格子里是否有东西</span></code></pre></div>
+<h3 id="动态绑定和词法绑定">动态绑定和词法绑定</h3>
+
+<p>动态意味着在执行到此处时，会查看当前的symbol列表里有没有这个symbol，有的话就用。
+词法绑定是在执行之前就绑定好了的。</p>
+
+<h3 id="buffer-local-variable">Buffer Local Variable</h3>
+
+<p>每个Buffer维护自己的实例，也可能有全局的默认值。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lisp" data-lang="lisp"><span style="color:#75715e">;; In buffer ‘foo’:</span>
+(make-local-variable <span style="color:#e6db74">&#39;buffer-local</span>)
+    <span style="color:#960050;background-color:#1e0010">⇒</span> buffer-local
+(setq buffer-local <span style="color:#e6db74">&#39;value-in-foo</span>)
+    <span style="color:#960050;background-color:#1e0010">⇒</span> value-in-foo
+(setq-default buffer-local <span style="color:#e6db74">&#39;new-default</span>)
+    <span style="color:#960050;background-color:#1e0010">⇒</span> new-default
+buffer-local
+    <span style="color:#960050;background-color:#1e0010">⇒</span> value-in-foo
+(default-value <span style="color:#e6db74">&#39;buffer-local</span>)
+    <span style="color:#960050;background-color:#1e0010">⇒</span> new-default
+
+<span style="color:#75715e">;; In (the new) buffer ‘bar’:</span>
+buffer-local
+    <span style="color:#960050;background-color:#1e0010">⇒</span> new-default
+(default-value <span style="color:#e6db74">&#39;buffer-local</span>)
+    <span style="color:#960050;background-color:#1e0010">⇒</span> new-default
+(setq buffer-local <span style="color:#e6db74">&#39;another-default</span>)
+    <span style="color:#960050;background-color:#1e0010">⇒</span> another-default
+(default-value <span style="color:#e6db74">&#39;buffer-local</span>)
+    <span style="color:#960050;background-color:#1e0010">⇒</span> another-default
+
+<span style="color:#75715e">;; Back in buffer ‘foo’:</span>
+buffer-local
+    <span style="color:#960050;background-color:#1e0010">⇒</span> value-in-foo
+(default-value <span style="color:#e6db74">&#39;buffer-local</span>)
+    <span style="color:#960050;background-color:#1e0010">⇒</span> another-default</code></pre></div>
+<h2 id="function">Function</h2>
+
+<h2 id="macro">Macro</h2>
+
+<hr />
+
+<h1 id="evaluation">Evaluation</h1>
+
+<hr />
+
+<h1 id="input-event-and-keymaps">Input Event and Keymaps</h1>
+
+<p>Emacs的输入被抽象成input events，它可以代表键盘和鼠标的活动，也可以代表系统发送给Emacs的信号。
+keymap是一个列表，里面的每个元素是一个input event与其他keymap或者command的联系。如果一个input event绑定到一个keymap，那么keymap会等下一个input event，直到找到一个command。这个过程被称为<code>key lookup</code>。</p>
+
+<h2 id="key-sequences">Key Sequences</h2>
+
+<p>也称为key，是一系列的input events的集合。可以用一个string或者vector来存储key。</p>
+
+<p>在string的标识中，普通的字符就是本身，控制字符稍特殊，control -&gt; &ldquo;\C-&ldquo;，<TAB> -&gt; &ldquo;\t&rdquo;, <RET> -&gt; &ldquo;\r&rdquo;, <ESC> -&gt; &ldquo;\e&rdquo;, <DEL> _&gt;&rdquo;\d&gt;。</p>
+
+<p>但string也不能表示所有的key sequences，比如&rdquo;C+=&rdquo;\&ldquo;H-a&rdquo;，这时候就需要用vector来表示了。在vector中，每个input event是以Lisp form 来表示的。比如&rsquo;[?\C-x ?1]&lsquo;就是&rdquo;C-x 1&rdquo;的表示。</p>
+
+<h2 id="keymap">Keymap</h2>
+
+<p>有全局的key-map和local-map，可以通过函数<code>current-global-map</code>和<code>current-local-map</code>拿到。</p>
+
+<p>如果一个key sequence的binding是另外一个keymap，那么这个key sequence就被称作是&rdquo;prefix key&rdquo;。Emacs也自定义了一些map用来设置通用的前缀，比如esc-map,helpmap等，就是我们平常用的<ESC>, C-h等。</p>
+
+<hr />
+
+<h1 id="loading">Loading</h1>
+
+<p>加载一个Lisp file意味着把这个文件里所有的内容载入到Lisp环境中，而且是以Lisp Object的形式。Emacs找到并打开这个文件，按照文本的形式读入，evaluate每个form，再关掉文件。这样的一个文件也叫“Lisp library”。</p>
+
+<p>要被加载的文件必须包含Lisp expression，或者是一件经过compile的code。文件中的每个form被称作“top-level form”。相比于在buffer里的form，从文件里加载并没有什么不同。一般来说，这些form都是函数定义或者变量定义。</p>
+
+<p>Emacs也可以动态加载被事先编译好的模块。在这种类型的模块被加载时，Emacs会执行一些特殊的初始化方法，这些方法在模块中已经被实现了。</p>
+
+<h2 id="how-programs-do-loading">How Programs Do Loading</h2>
+
+<p>有挺多种方法来加载程序的。比如，<code>autoload</code>会执行一些延时加载的动作，<code>require</code>会严格执行一次加载，但这些都会最终调用<code>load</code>。</p>
+
+<h3 id="load">load</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lisp" data-lang="lisp">(load filename &amp;optional missing-ok nomessage nosuffix must-suffix)</code></pre></div>
+<p>此函数找到并且打开文件，执行里面所有的form，再关掉。假设filname=FILENAME，那么搜索顺序如下：</p>
+
+<ol>
+<li>FILENAME.elc</li>
+<li>FILENAME.el</li>
+<li>FILENAME.ext</li>
+</ol>
+
+<p>当找到文件时，Emacs就会把<code>load-file-name</code>变量设置为该文件名。</p>
+
+<h3 id="load-path">Load path</h3>
+
+<p>类似于Linux中的$PATH，Emacs在找文件时，在这个`load-path中搜索。</p>
+
+<p><code>load-path</code>是一个列表，其中的元素是string或者nil(代表当前目录)。如果启动时设置了<code>EMACSLOADPATH</code>，那么这个列表就会自动加入<code>load-path</code>。可以用下面的方法来添加自己定义的<code>load-path</code>。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lisp" data-lang="lisp">(push <span style="color:#e6db74">&#34;~/.emacs.d/lisp&#34;</span> load-path)</code></pre></div>
+<h3 id="autoload">Autoload</h3>
+
+<p><code>autoload</code>可以事先注册一些定义好的函数，然后在之后加载之。第一次调用此函数就会自动从library中加载了。有两种方法来设置<code>autoload</code>的函数：</p>
+
+<ol>
+<li>调用<code>autoload</code></li>
+<li>在定义时候，在comment前加一些魔数。</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lisp" data-lang="lisp">( autoload function filename &amp;optional docstring interactive type)</code></pre></div>
+<p>以上函数可以声明一个可以支持<code>autoload</code>的函数。第二种方法最终也会将一个autoload写入到一个文件中，所以是一种简便包装。</p>
+
+<h2 id="features">Features</h2>
+
+<p>常见的provide和require，就是feature实现的功能。一个feature可以看作一系列函数、变量的代表。定义这些函数和变量的文件会provide一个feature，其他的文件，如果要用到这些功能，就require这个feature。在调用require的时候，会检查要给全局的feature列表，看看是否已经加载到了；如果没有加载到，然后Emacs就会寻找提供这个feature的文件，再加载。提供feature的文件需要在顶层调用provide。一般来说，feature的名字和提供feature名字的文件名是一样的。</p>
+
+<h2 id="mics">Mics</h2>
+
+<p>可以用<code>symbol-file symbol</code>来查看是那个文件定义了这个变量。</p>
+
+<p>Load有一些hook，<code>after-load-functions</code>，在加载完后调用。</p>
+
+<h1 id="package">Package</h1>
+
+<h2 id="developers-view">Developers&rsquo; view</h2>
+
+<p>有两种类型的&rdquo;package&rdquo;，单个文件和多个文件。单文件比较好理解，多文件则是打包成一个tar文件作为一个实体。每个package都有如下的&rdquo;Attribute&rdquo;:</p>
+
+<ol>
+<li>Name</li>
+<li>Version</li>
+<li>Brief description</li>
+<li>Long description</li>
+<li>Dependencies</li>
+</ol>
+
+<p>安装package，就是把这相关的文件下载下来，放到<code>package-user-dir</code>里，里面的文件一般是以<code>NAME-VERSION</code>命名。多文件的package则以相同的命名方式命名一个文件夹，这个文件夹被称为content directory。然后Emacs就会搜索这些文件，看看有没有autoload的comments。如果有，则提取出来，存入<code>NAME-autoloads.el</code>里，这个文件也放在同样的目录下。在安装好后，就把这个content directory加入load-path。</p>
+
+<p>每次Emacs启动，都会调用<code>package-initialize</code>来加载已经安装好的packages。</p>
+
+<h3 id="单文件package">单文件package</h3>
+
+<p>所有的信息都在这个文件里，上述提到的package的attribute是以comment的形式存放在文件的开头。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lisp" data-lang="lisp"><span style="color:#75715e">;;; superfrobnicator.el --- Frobnicate and bifurcate flanges</span>
+
+<span style="color:#75715e">;; Copyright (C) 2011 Free Software Foundation, Inc.</span>
+
+<span style="color:#75715e">;; Author: J. R. Hacker &lt;jrh@example.com&gt;</span>
+<span style="color:#75715e">;; Version: 1.3</span>
+<span style="color:#75715e">;; Package-Requires: ((flange &#34;1.0&#34;))</span>
+<span style="color:#75715e">;; Keywords: multimedia, frobnicate</span>
+<span style="color:#75715e">;; URL: http://example.com/jrhacker/superfrobnicate</span>
+
+<span style="color:#960050;background-color:#1e0010">…</span>
+
+<span style="color:#75715e">;;; Commentary:</span>
+
+<span style="color:#75715e">;; This package provides a minor mode to frobnicate and/or</span>
+<span style="color:#75715e">;; bifurcate any flanges you desire.  To activate it, just type</span>
+<span style="color:#960050;background-color:#1e0010">…</span>
+
+<span style="color:#75715e">;;;###autoload</span>
+(define-minor-mode superfrobnicator-mode)</code></pre></div>
+<h3 id="多文件package">多文件package</h3>
+
+<p>多文件的package会存放在一个文件夹下，里面有一个文件叫做<code>NAME-pkg.el</code>。所需的信息就存在这个里面。随便打开一个就能知道该文件长什么样了。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lisp" data-lang="lisp">(define-package
+    <span style="color:#e6db74">&#34;ac-math&#34;</span>
+    <span style="color:#e6db74">&#34;20141116.1327&#34;</span>
+    <span style="color:#e6db74">&#34;Auto-complete sources for input of mathematical symbols and latex tags&#34;</span>
+    <span style="color:#f92672">&#39;</span>((auto-complete <span style="color:#e6db74">&#34;1.4&#34;</span>) (math-symbol-lists <span style="color:#e6db74">&#34;1.0&#34;</span>))
+    <span style="color:#e6db74">:url</span> <span style="color:#e6db74">&#34;https://github.com/vitoshka/ac-math&#34;</span>
+    <span style="color:#e6db74">:keywords</span> <span style="color:#f92672">&#39;</span>(<span style="color:#e6db74">&#34;latex&#34;</span> <span style="color:#e6db74">&#34;auto-complete&#34;</span> <span style="color:#e6db74">&#34;unicode&#34;</span> <span style="color:#e6db74">&#34;symbols&#34;</span>))</code></pre></div>
+<h2 id="users-view">Users&rsquo; view</h2>
+
+<p>主要功能由<code>package.el</code>提供，是emacs自带的一项功能。</p>
+
+<h1 id="writing-mode">Writing Mode</h1>
+
+<h2 id="major-mode">Major Mode</h2>
+
+<h3 id="约定">约定</h3>
+
+<ol>
+<li>定义一个major mode command，以&rsquo;-mode&rsquo;结尾。这个command被调用的时候，应当切换当前的mode，然后设置keymap, syntax table, buffer-loacl variable。同时不能改变buffer里的内容。</li>
+<li>写一个documention string。</li>
+<li>major mode command应当调用&rsquo;kill-all-local-variables&rsquo;。这条命令会调用&rsquo;change-major-mode-hook&rsquo;，抹掉之前有影响的buffer local 变量。</li>
+<li>设置变量&rsquo;major-mode&rsquo;指向当前的command symbol。</li>
+<li>设置变量&rsquo;mode-name&rsquo;，通常来说是string。</li>
+<li>需要遵守变量命名规则。</li>
+<li>如果需要缩进，则将&rsquo;indent-line-function&rsquo;绑定到一个自己定义的缩进函数上。可以参考&rsquo;Auto-Indention&rsquo;。</li>
+<li>如果有keymap，那么应当使用&rsquo;use-local-map&rsquo;来安装，而且名字应当遵守&rsquo;MODENAME-mode-map&rsquo;。</li>
+<li>建议是以&rsquo;C-c&rsquo;来作为绑定键的开始，之后就可以跟一些其他的键了。一些标准按键，在不引起误会的情况下，可以被重新绑定。<RET>不能乱来。</li>
+<li>如果有自己的Syntax table，那么应当命名为&rsquo;MODENAME-mode-syntax-table&rsquo;。</li>
+<li>。。。</li>
+</ol>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/blog/grub/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Grub2</a>
+    </div><div class='next-entry'>
+      <a href='/blog/django/'>
+        <span class='screen-reader'>Next post: </span>Django<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/byaiu' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:byaiuwd@outlook.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+      Byaiu &copy; 2017 Sytrumic 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Something about Qt Qt是作为一个GUI框架而映入眼帘的。初学Qt，有两个模块比较重要，Core和GUI，而这也是QT作为GUI的一个基石。
+Qt官方文档组织稍微有点奇怪，相对比较杂乱。不过鉴于Qt其实是一个一站式的开发平台，倒是可以理解的。对于稍微有经验的开发者，也不是急于上手项目，那么其实从Develoopment Topics看起是挺好的选择。
+推荐的顺序是Core -&gt; User Interfaces -&gt; Graphics。
+首先是要了解Qt对于编程的一些抽象和约定，这是Core要解决的问题；其次，我们使用Qt就是为了写用户界面，那么对于界面的编写需要有一些映像，此时就要学习User Interfaces，看了后最好能对QWidget和它的子类有一定的了解，并且掌握常用的控件和布局，并学习Qt里的“行话”&ndash;Model/View, Drag and drop等等；在真正需要开发应用的时候，很有可能要自己定制控件，那么了解Graphics可以帮助我们学习如何画出一个自己想要的控件。
+Core 如果能在脑中建立起Qt中对各个组件的抽象，那么会对这个框架的运作了解深刻一些。在接触这样一个新的框架时，大概有这样几个疑问需要解答：
+ 这里都有什么东西？  在这个框架里最基本的东西是什么？就是一个个对象，它们被称为Object。所有的交互都是建立在这些粒子之上的。
+ 这些东西都是什么？
+ 这些粒子其实是需要被标识的，所以他们都会有名字。 它们也需要被组织起来，所以每个对象都会有父亲或者儿子。  它们都是怎样交互的？
+  这大概就是Qt最著名的Signal/Slot的用武之地。某个对象会发出Signal，然后与之关联的Slot就会被调用，他们之间完全不需要知道对方的存在。这给编程带来了非常好的解耦能力，要知道用在面向对象的编程风格中，拥有其他类的指针并且维护它们之间的关系是非常dirty的工作。
+对象系统 Identity Or Value 我们应当把Qt的每一个对象实例视为独一无二的存在，即Identity的意义所在。双胞胎可能看起来很像，他们可能是从同一个模子里出来的(Class)，但是他们有两个不同的ID(内存地址)。
+对象有什么能力  之间可以沟通 : Signal and slot 属性系统 : 每个类的实例都会带一些属性，可以进行存取、校验等 支持事件的传递等 自动内存管理 构建一个对象树，可以让Qt来帮助管理对象实例的生存周期  事件系统 单纯的看看我们是怎么把自己的意志传达给程序的。一般的电脑就只有鼠标&#43;键盘，只要处理好这两个输入源，就能驱动我们的程序运行下去。把这些输入精确的映射到某段代码的执行，是由Qt这个框架完成的。
+ 某种输入(鼠标点击、键盘按下)是传给这个应用程序的，操作系统把一些raw data传给Qt，比如点击的坐标，按键值等 Qt把这些东西封装到一个类的实例中，这个类就是QEvent，再寻找传给哪个接收对象。 QObject都有event(QEvent *e)方法，Qt会调用对象的这个方法，表示传递到了这个对象，然后做什么由对象决定。 每个对象的event(QEvent *e)都是一个分派处，在这里，会根据QEvent的类型，调用一些虚函数。 所以，在自定义Widget时，要重写特定的虚函数，是为了让Qt能够最终调用到我们的逻辑。  再细究的话还有很多相关的处理机制，但是大体的流程就是上面所述。
+User Interface 在没有接触很多GUI编程的时候，对GUI中的基本元素还是有着一种隐约的敬畏之心的，觉得它们是操作系统提出来的原子类型，是很难改变的。但是稍加了解之后就会发现，这些都是画出来的！
+在Qt中，每种界面元素都是QWidget。而QWidget有一个方法叫paintEvent(QPaintEvent *)。每个Widget长什么样都是由这个方法的执行说了算的。有了这种想法垫底后，再思考一下平常看到的各种界面元素：Button\Label\Frame，其实也就没有太多的神秘了。大致了解一下常见的widgets，有助于稳定心绪。'>
+
+<meta property='og:title' content='Qt ⋆ Sytrumics'>
+<meta property='og:description' content='Something about Qt Qt是作为一个GUI框架而映入眼帘的。初学Qt，有两个模块比较重要，Core和GUI，而这也是QT作为GUI的一个基石。
+Qt官方文档组织稍微有点奇怪，相对比较杂乱。不过鉴于Qt其实是一个一站式的开发平台，倒是可以理解的。对于稍微有经验的开发者，也不是急于上手项目，那么其实从Develoopment Topics看起是挺好的选择。
+推荐的顺序是Core -&gt; User Interfaces -&gt; Graphics。
+首先是要了解Qt对于编程的一些抽象和约定，这是Core要解决的问题；其次，我们使用Qt就是为了写用户界面，那么对于界面的编写需要有一些映像，此时就要学习User Interfaces，看了后最好能对QWidget和它的子类有一定的了解，并且掌握常用的控件和布局，并学习Qt里的“行话”&ndash;Model/View, Drag and drop等等；在真正需要开发应用的时候，很有可能要自己定制控件，那么了解Graphics可以帮助我们学习如何画出一个自己想要的控件。
+Core 如果能在脑中建立起Qt中对各个组件的抽象，那么会对这个框架的运作了解深刻一些。在接触这样一个新的框架时，大概有这样几个疑问需要解答：
+ 这里都有什么东西？  在这个框架里最基本的东西是什么？就是一个个对象，它们被称为Object。所有的交互都是建立在这些粒子之上的。
+ 这些东西都是什么？
+ 这些粒子其实是需要被标识的，所以他们都会有名字。 它们也需要被组织起来，所以每个对象都会有父亲或者儿子。  它们都是怎样交互的？
+  这大概就是Qt最著名的Signal/Slot的用武之地。某个对象会发出Signal，然后与之关联的Slot就会被调用，他们之间完全不需要知道对方的存在。这给编程带来了非常好的解耦能力，要知道用在面向对象的编程风格中，拥有其他类的指针并且维护它们之间的关系是非常dirty的工作。
+对象系统 Identity Or Value 我们应当把Qt的每一个对象实例视为独一无二的存在，即Identity的意义所在。双胞胎可能看起来很像，他们可能是从同一个模子里出来的(Class)，但是他们有两个不同的ID(内存地址)。
+对象有什么能力  之间可以沟通 : Signal and slot 属性系统 : 每个类的实例都会带一些属性，可以进行存取、校验等 支持事件的传递等 自动内存管理 构建一个对象树，可以让Qt来帮助管理对象实例的生存周期  事件系统 单纯的看看我们是怎么把自己的意志传达给程序的。一般的电脑就只有鼠标&#43;键盘，只要处理好这两个输入源，就能驱动我们的程序运行下去。把这些输入精确的映射到某段代码的执行，是由Qt这个框架完成的。
+ 某种输入(鼠标点击、键盘按下)是传给这个应用程序的，操作系统把一些raw data传给Qt，比如点击的坐标，按键值等 Qt把这些东西封装到一个类的实例中，这个类就是QEvent，再寻找传给哪个接收对象。 QObject都有event(QEvent *e)方法，Qt会调用对象的这个方法，表示传递到了这个对象，然后做什么由对象决定。 每个对象的event(QEvent *e)都是一个分派处，在这里，会根据QEvent的类型，调用一些虚函数。 所以，在自定义Widget时，要重写特定的虚函数，是为了让Qt能够最终调用到我们的逻辑。  再细究的话还有很多相关的处理机制，但是大体的流程就是上面所述。
+User Interface 在没有接触很多GUI编程的时候，对GUI中的基本元素还是有着一种隐约的敬畏之心的，觉得它们是操作系统提出来的原子类型，是很难改变的。但是稍加了解之后就会发现，这些都是画出来的！
+在Qt中，每种界面元素都是QWidget。而QWidget有一个方法叫paintEvent(QPaintEvent *)。每个Widget长什么样都是由这个方法的执行说了算的。有了这种想法垫底后，再思考一下平常看到的各种界面元素：Button\Label\Frame，其实也就没有太多的神秘了。大致了解一下常见的widgets，有助于稳定心绪。'>
+<meta property='og:url' content='http://www.example.com/blog/qt/'>
+<meta property='og:site_name' content='Sytrumics'>
+<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:published_time' content='2016-11-23T19:49:49&#43;08:00'/><meta property='article:modified_time' content='2016-11-23T19:49:49&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+  <title>Qt ⋆ Sytrumics</title>
+  <link rel='canonical' href='http://www.example.com/blog/qt/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-blog'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/blog/'>Blog</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Sytrumics</p>
+          
+          <p class='site-description subtitle'>Hi, welcome to my blog.</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Qt</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2016-11-23T19:49:49&#43;08:00'>2016, Nov 23</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+One min read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<h1 id="something-about-qt">Something about Qt</h1>
+
+<p>Qt是作为一个GUI框架而映入眼帘的。初学Qt，有两个模块比较重要，Core和GUI，而这也是QT作为GUI的一个基石。</p>
+
+<p>Qt<a href="https://doc.qt.io" target="_blank">官方文档</a>组织稍微有点奇怪，相对比较杂乱。不过鉴于Qt其实是一个一站式的开发平台，倒是可以理解的。对于稍微有经验的开发者，也不是急于上手项目，那么其实从<a href="https://doc.qt.io/qt-5/overviews-main.html" target="_blank">Develoopment Topics</a>看起是挺好的选择。</p>
+
+<p>推荐的顺序是<a href="https://doc.qt.io/qt-5/topics-core.html" target="_blank">Core</a> -&gt; <a href="https://doc.qt.io/qt-5/topics-ui.html" target="_blank">User Interfaces</a> -&gt; <a href="https://doc.qt.io/qt-5/topics-graphics.html" target="_blank">Graphics</a>。</p>
+
+<p>首先是要了解Qt对于编程的一些抽象和约定，这是Core要解决的问题；其次，我们使用Qt就是为了写用户界面，那么对于界面的编写需要有一些映像，此时就要学习User Interfaces，看了后最好能对QWidget和它的子类有一定的了解，并且掌握常用的控件和布局，并学习Qt里的“行话”&ndash;Model/View, Drag and drop等等；在真正需要开发应用的时候，很有可能要自己定制控件，那么了解Graphics可以帮助我们学习如何画出一个自己想要的控件。</p>
+
+<hr />
+
+<h1 id="core">Core</h1>
+
+<p>如果能在脑中建立起Qt中对各个组件的抽象，那么会对这个框架的运作了解深刻一些。在接触这样一个新的框架时，大概有这样几个疑问需要解答：</p>
+
+<ul>
+<li>这里都有什么东西？</li>
+</ul>
+
+<p>在这个框架里最基本的东西是什么？就是一个个对象，它们被称为Object。所有的交互都是建立在这些粒子之上的。</p>
+
+<ul>
+<li><p>这些东西都是什么？</p>
+
+<ul>
+<li>这些粒子其实是需要被标识的，所以他们都会有名字。</li>
+<li>它们也需要被组织起来，所以每个对象都会有父亲或者儿子。</li>
+</ul></li>
+
+<li><p>它们都是怎样交互的？</p></li>
+</ul>
+
+<p>这大概就是Qt最著名的Signal/Slot的用武之地。某个对象会发出Signal，然后与之关联的Slot就会被调用，他们之间完全不需要知道对方的存在。这给编程带来了非常好的解耦能力，要知道用在面向对象的编程风格中，拥有其他类的指针并且维护它们之间的关系是非常dirty的工作。</p>
+
+<h2 id="对象系统">对象系统</h2>
+
+<h3 id="identity-or-value">Identity Or Value</h3>
+
+<p>我们应当把Qt的每一个对象实例视为独一无二的存在，即Identity的意义所在。双胞胎可能看起来很像，他们可能是从同一个模子里出来的(Class)，但是他们有两个不同的ID(内存地址)。</p>
+
+<h3 id="对象有什么能力">对象有什么能力</h3>
+
+<ul>
+<li>之间可以沟通 :  Signal and slot</li>
+<li>属性系统 : 每个类的实例都会带一些属性，可以进行存取、校验等</li>
+<li>支持事件的传递等</li>
+<li>自动内存管理</li>
+<li>构建一个对象树，可以让Qt来帮助管理对象实例的生存周期</li>
+</ul>
+
+<h2 id="事件系统">事件系统</h2>
+
+<p>单纯的看看我们是怎么把自己的意志传达给程序的。一般的电脑就只有鼠标+键盘，只要处理好这两个输入源，就能驱动我们的程序运行下去。把这些输入精确的映射到某段代码的执行，是由Qt这个框架完成的。</p>
+
+<ol>
+<li>某种输入(鼠标点击、键盘按下)是传给这个应用程序的，操作系统把一些raw data传给Qt，比如点击的坐标，按键值等</li>
+<li>Qt把这些东西封装到一个类的实例中，这个类就是<code>QEvent</code>，再寻找传给哪个接收对象。</li>
+<li><code>QObject</code>都有<code>event(QEvent *e)</code>方法，Qt会调用对象的这个方法，表示传递到了这个对象，然后做什么由对象决定。</li>
+<li>每个对象的<code>event(QEvent *e)</code>都是一个分派处，在这里，会根据<code>QEvent</code>的类型，调用一些虚函数。</li>
+<li>所以，在自定义Widget时，要重写特定的虚函数，是为了让Qt能够最终调用到我们的逻辑。</li>
+</ol>
+
+<p>再细究的话还有很多相关的处理机制，但是大体的流程就是上面所述。</p>
+
+<hr />
+
+<h1 id="user-interface">User Interface</h1>
+
+<p>在没有接触很多GUI编程的时候，对GUI中的基本元素还是有着一种隐约的敬畏之心的，觉得它们是操作系统提出来的原子类型，是很难改变的。但是稍加了解之后就会发现，这些都是画出来的！</p>
+
+<p>在Qt中，每种界面元素都是QWidget。而QWidget有一个方法叫<code>paintEvent(QPaintEvent *)</code>。每个Widget长什么样都是由这个方法的执行说了算的。有了这种想法垫底后，再思考一下平常看到的各种界面元素：Button\Label\Frame，其实也就没有太多的神秘了。大致了解一下常见的widgets，有助于稳定心绪。</p>
+
+<p><img src="../attach/framework/pic/widget-hierichy.png" alt="Qt常用组件" /></p>
+
+<p>现在写界面的会有两种选择，QML和QWidget。现在流行的趋势是使用一种描述语言来描述界面，然后用通用语言编写逻辑。Windows的C#采用了XAML，Java的JavaFX采用了Fxml，基本上都在和Web前端编程看齐。但是作为一个桌面程序，前端和后端其实没有必要分离太大，只要有合适的解耦就可以了。所以最基本的用代码写界面的水平还是要有的，Widget里常用方法的作用还是需要掌握。</p>
+
+<h2 id="常用组件">常用组件</h2>
+
+<h3 id="main-window">Main Window</h3>
+
+<p>Qt有预先定义了一些主程序窗口都有的部件，比如status bar \menu bar \tool bar。继承了<code>QMainWindow</code>后，就可以简单的调用一些<code>QMainWindow</code>里的函数来显示相应的组件。</p>
+
+<p><img src="../attach/framework/pic/mainwindowlayout.png" alt="QMainWindow" /></p>
+
+<h3 id="dialog-windows">Dialog Windows</h3>
+
+<h3 id="layout">Layout</h3>
+
+<h2 id="model-view">Model/View</h2>
+
+<h2 id="drag-and-drop-dnd">Drag and Drop (DnD)</h2>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/blog/django/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Django</a>
+    </div><div class='next-entry'>
+      <a href='/blog/hardware/'>
+        <span class='screen-reader'>Next post: </span>Hardware Related<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/byaiu' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:byaiuwd@outlook.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+      Byaiu &copy; 2017 Sytrumic 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

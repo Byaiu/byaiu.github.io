@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Racket Racket是一门让人很舒服的语言。作为Scheme，语言本身的概念也比较简单，其又扩充了很多功能，比如模块化的支持，合同，面向对象等，每种功能也比较小，而且知识边界比较清晰，上手不会非常的痛苦。
+As Scheme 自定义数据类型 struct 一般新的数据类型由struct关键词定义，class也可以，只是class也是建立在struct的基础上。
+数据定义的语法为：
+(struct struct-id (field-id ...)) ;; Example (struct posn (x y)) struct关键字会绑定一些东西到struct-id上：
+ 构造函数struct-id 判断函数struct-id?，用于判断是否为此类型 Field accessor struct-id-field-id，用于访问filed-id 产生一个用于描述此类型的值struct:struct-id  但是用struct定义数据并不会对其中的field作检查，对其类型的限制是通过contract来完成的。
+复制和更新 通过struct-copy可以得到新的实例，并且和之前的并不冲突。
+(struct-copy struct-id struct-expr [field-id expr] ...) 子类型 也可以用struct来定义一个structure subtype。
+(struct struct-id super-id (field-id ...)) 假设B继承自A， A中有一个field叫做f，从B是没办法用B-f来引用到f的，只能用A-f来引用。
+Opaque vs Transparent 字面意思上理解的话，一个是暴露自己的内部结构，一个是不暴露。用opaque的话，就隐藏自己的实现，不能reflection，也不能被打印出来。用transparent的话就不会这样了。不过，默认是opaque的。可以用如下方法来 改变这个属性。
+(struct posn (x y) #:transparent) 比较 一般用equal?来比较两个实例。如果实例是transparent的struct，那么会自动比较每个域，如果是opaque，则需要自定义一个#:methods 即 gen:equal&#43;hash来定制比较的过程，这需要定义3个方法：
+ equal-proc hash-proc hash2-proc  Structure Type Generativity 只要struct被evaluate一次，就会产生一个新的类型。如果把struct的定义放在一个可以被多次调用的函数里，那么每次调用就都会产生一个新的类型。'>
+
+<meta property='og:title' content='Racket ⋆ Sytrumics'>
+<meta property='og:description' content='Racket Racket是一门让人很舒服的语言。作为Scheme，语言本身的概念也比较简单，其又扩充了很多功能，比如模块化的支持，合同，面向对象等，每种功能也比较小，而且知识边界比较清晰，上手不会非常的痛苦。
+As Scheme 自定义数据类型 struct 一般新的数据类型由struct关键词定义，class也可以，只是class也是建立在struct的基础上。
+数据定义的语法为：
+(struct struct-id (field-id ...)) ;; Example (struct posn (x y)) struct关键字会绑定一些东西到struct-id上：
+ 构造函数struct-id 判断函数struct-id?，用于判断是否为此类型 Field accessor struct-id-field-id，用于访问filed-id 产生一个用于描述此类型的值struct:struct-id  但是用struct定义数据并不会对其中的field作检查，对其类型的限制是通过contract来完成的。
+复制和更新 通过struct-copy可以得到新的实例，并且和之前的并不冲突。
+(struct-copy struct-id struct-expr [field-id expr] ...) 子类型 也可以用struct来定义一个structure subtype。
+(struct struct-id super-id (field-id ...)) 假设B继承自A， A中有一个field叫做f，从B是没办法用B-f来引用到f的，只能用A-f来引用。
+Opaque vs Transparent 字面意思上理解的话，一个是暴露自己的内部结构，一个是不暴露。用opaque的话，就隐藏自己的实现，不能reflection，也不能被打印出来。用transparent的话就不会这样了。不过，默认是opaque的。可以用如下方法来 改变这个属性。
+(struct posn (x y) #:transparent) 比较 一般用equal?来比较两个实例。如果实例是transparent的struct，那么会自动比较每个域，如果是opaque，则需要自定义一个#:methods 即 gen:equal&#43;hash来定制比较的过程，这需要定义3个方法：
+ equal-proc hash-proc hash2-proc  Structure Type Generativity 只要struct被evaluate一次，就会产生一个新的类型。如果把struct的定义放在一个可以被多次调用的函数里，那么每次调用就都会产生一个新的类型。'>
+<meta property='og:url' content='http://www.example.com/blog/racket/'>
+<meta property='og:site_name' content='Sytrumics'>
+<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:published_time' content='2016-10-27T19:49:49&#43;08:00'/><meta property='article:modified_time' content='2016-10-27T19:49:49&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+  <title>Racket ⋆ Sytrumics</title>
+  <link rel='canonical' href='http://www.example.com/blog/racket/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-blog'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/blog/'>Blog</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Sytrumics</p>
+          
+          <p class='site-description subtitle'>Hi, welcome to my blog.</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Racket</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2016-10-27T19:49:49&#43;08:00'>2016, Oct 27</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+One min read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<h1 id="racket">Racket</h1>
+
+<p>Racket是一门让人很舒服的语言。作为Scheme，语言本身的概念也比较简单，其又扩充了很多功能，比如模块化的支持，合同，面向对象等，每种功能也比较小，而且知识边界比较清晰，上手不会非常的痛苦。</p>
+
+<h2 id="as-scheme">As Scheme</h2>
+
+<h3 id="自定义数据类型-struct">自定义数据类型 <code>struct</code></h3>
+
+<p>一般新的数据类型由<code>struct</code>关键词定义，<code>class</code>也可以，只是<code>class</code>也是建立在<code>struct</code>的基础上。</p>
+
+<p>数据定义的语法为：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket">(<span style="color:#66d9ef">struct</span> struct-id (field-id <span style="color:#66d9ef">...</span>))
+<span style="color:#75715e">;; Example</span>
+(<span style="color:#66d9ef">struct</span> posn (x y))</code></pre></div>
+<p><code>struct</code>关键字会绑定一些东西到<code>struct-id</code>上：</p>
+
+<ol>
+<li>构造函数<code>struct-id</code></li>
+<li>判断函数<code>struct-id?</code>，用于判断是否为此类型</li>
+<li>Field accessor <code>struct-id-field-id</code>，用于访问<code>filed-id</code></li>
+<li>产生一个用于描述此类型的值<code>struct:struct-id</code></li>
+</ol>
+
+<p>但是用<code>struct</code>定义数据并不会对其中的field作检查，对其类型的限制是通过<code>contract</code>来完成的。</p>
+
+<h4 id="复制和更新">复制和更新</h4>
+
+<p>通过<code>struct-copy</code>可以得到新的实例，并且和之前的并不冲突。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket">(<span style="color:#66d9ef">struct-copy</span> struct-id struct-expr [field-id expr] <span style="color:#66d9ef">...</span>)</code></pre></div>
+<h4 id="子类型">子类型</h4>
+
+<p>也可以用<code>struct</code>来定义一个<code>structure subtype</code>。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket">(<span style="color:#66d9ef">struct</span> struct-id super-id (field-id <span style="color:#66d9ef">...</span>))</code></pre></div>
+<p>假设<code>B</code>继承自<code>A</code>， A中有一个field叫做<code>f</code>，从B是没办法用<code>B-f</code>来引用到<code>f</code>的，只能用<code>A-f</code>来引用。</p>
+
+<h4 id="opaque-vs-transparent">Opaque vs Transparent</h4>
+
+<p>字面意思上理解的话，一个是暴露自己的内部结构，一个是不暴露。用<code>opaque</code>的话，就隐藏自己的实现，不能<code>reflection</code>，也不能被打印出来。用<code>transparent</code>的话就不会这样了。不过，默认是<code>opaque</code>的。可以用如下方法来 改变这个属性。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket">(<span style="color:#66d9ef">struct</span> posn (x y)
+        <span style="color:#66d9ef">#:transparent</span>)</code></pre></div>
+<h4 id="比较">比较</h4>
+
+<p>一般用<code>equal?</code>来比较两个实例。如果实例是<code>transparent</code>的<code>struct</code>，那么会自动比较每个域，如果是<code>opaque</code>，则需要自定义一个<code>#:methods</code> 即 <code>gen:equal+hash</code>来定制比较的过程，这需要定义3个方法：</p>
+
+<ol>
+<li><code>equal-proc</code></li>
+<li><code>hash-proc</code></li>
+<li><code>hash2-proc</code></li>
+</ol>
+
+<h4 id="structure-type-generativity">Structure Type Generativity</h4>
+
+<p>只要<code>struct</code>被evaluate一次，就会产生一个新的类型。如果把<code>struct</code>的定义放在一个可以被多次调用的函数里，那么每次调用就都会产生一个新的类型。</p>
+
+<h4 id="prefab-structure-types">Prefab Structure Types</h4>
+
+<p>这个prefab会处理对象的字符串表示与对象本身之间的转换。<code>struct</code>的字符串表示和<code>vector</code>有点像，只不过是以<code>'#s</code>开头的。</p>
+
+<p>racket里的各种结构定义大致就3种。</p>
+
+<ol>
+<li>Opaque(default)。隐藏内部结构。</li>
+<li>Transparent。可以把内部结构打印出来。</li>
+<li>Prefab(previously fabricated)。可以随便构建，即使没有一个对应的定义也可以。</li>
+</ol>
+
+<h4 id="其他选项">其他选项</h4>
+
+<p><code>struct</code>还可以有很多其他的选项。</p>
+
+<ul>
+<li><code>#:mutable</code></li>
+<li><code>#:guard guard-expr</code></li>
+<li><code>:methods interface-expr [body ...]</code></li>
+<li><code>:property prop-expr val-expr</code></li>
+<li><code>:super super-expr</code></li>
+</ul>
+
+<h3 id="contract">Contract</h3>
+
+<h3 id="input-and-output">Input and Output</h3>
+
+<h3 id="macros">Macros</h3>
+
+<p>Lisp这类语言，很多杀手功能都是通过宏来实现的。Racket即提供了<code>pattern-based macro</code>，也提供了任意<code>macro transformer</code>。</p>
+
+<h2 id="drawing-picture">Drawing Picture</h2>
+
+<p>官方的Tutorial是以画图作为主题的，我们平常也需要画一些比较精确的图形。用Racket提供的画图库可以完美的达到要求。Racket中大概有这样一些和画图相关的库：</p>
+
+<ul>
+<li><p><code>racket/draw</code></p></li>
+
+<li><p><code>pict</code></p></li>
+
+<li><p><code>2htdp/image</code></p></li>
+</ul>
+
+<p>其中1最底层，需要和绘图设备<code>drawing context</code>打交道。2用到了1的一些东西，不需要和底层交互，本来是给<code>slideshow</code>写的，并且在<code>slideshow</code>里也包含了此库。3和2类似，是比较高级的，直接操作picture，是《How to Design Programs》的<code>teachpacks</code>里的东西。</p>
+
+<p>出于方便的目的，一般使用<code>pict</code>或者<code>2htdp/image</code>。但是这两个库操纵的都只是图片对象，如果最终要生成文件，则需要<code>file/convertible</code>的帮忙。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-racket" data-lang="racket"><span style="color:#f92672">#lang </span>racket
+(<span style="color:#66d9ef">require</span> 2htdp/image
+         file/convertible)
+
+(<span style="color:#66d9ef">define</span> (gen-grid r l)
+  (<span style="color:#66d9ef">let</span> ([rows (<span style="color:#66d9ef">λ</span> (n p) (<span style="color:#66d9ef">for/fold</span> ([ps empty-image])
+                                 ([i (range n)])
+                         (<span style="color:#66d9ef">let</span> ([ps (beside ps p)])
+                           ps)))]
+        [cols (<span style="color:#66d9ef">λ</span> (n p) (<span style="color:#66d9ef">for/fold</span> ([ps empty-image])
+                                 ([i (range n)])
+                         (<span style="color:#66d9ef">let</span> ([ps (above ps p)])
+                           ps)))]
+        [p (frame (rectangle <span style="color:#ae81ff">20</span> <span style="color:#ae81ff">15</span> <span style="color:#e6db74">&#34;solid&#34;</span> <span style="color:#e6db74">&#34;darkolivegreen&#34;</span>))])
+    (rows r (cols l p))))
+
+(<span style="color:#66d9ef">define</span> a (gen-grid <span style="color:#ae81ff">7</span> <span style="color:#ae81ff">4</span>))
+
+(<span style="color:#66d9ef">define</span> out (convert a <span style="color:#f92672">&#39;</span><span style="color:#e6db74">svg-bytes</span>))
+(call-with-output-file <span style="color:#e6db74">&#34;qazqaz.svg&#34;</span>
+  <span style="color:#66d9ef">#:exists</span> <span style="color:#f92672">&#39;</span><span style="color:#e6db74">truncate</span>
+  (<span style="color:#66d9ef">lambda</span> (o)
+    (display out o)))</code></pre></div>
+<p>这就是绘制图片并保存到文件的代码。可以看到通过<code>file/convertible</code>的支持，后续的图片导出工作已经变得非常方便了。</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/blog/packages/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Useful Python Package</a>
+    </div><div class='next-entry'>
+      <a href='/blog/grub/'>
+        <span class='screen-reader'>Next post: </span>Grub2<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/byaiu' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:byaiuwd@outlook.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+      Byaiu &copy; 2017 Sytrumic 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

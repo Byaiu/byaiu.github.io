@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>http://www.example.com/</loc>
+    <lastmod>2017-09-28T08:00:00+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/typography/</loc>
+    <lastmod>2017-09-28T08:00:00+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/</loc>
+    <lastmod>2017-10-29T11:09:40+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/about/</loc>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/dtrace/</loc>
+    <lastmod>2017-10-29T11:09:40+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/postscript/</loc>
+    <lastmod>2017-01-01T19:49:49+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/jiaxiang/</loc>
+    <lastmod>2016-12-30T16:52:28+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/dvi/</loc>
+    <lastmod>2016-11-28T08:32:58+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/latex/</loc>
+    <lastmod>2016-11-26T19:49:49+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/awk/</loc>
+    <lastmod>2016-11-25T20:44:28+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/continuation/</loc>
+    <lastmod>2016-11-23T20:44:28+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/functional/</loc>
+    <lastmod>2016-11-23T20:44:28+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/hardware/</loc>
+    <lastmod>2016-11-23T19:49:49+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/qt/</loc>
+    <lastmod>2016-11-23T19:49:49+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/django/</loc>
+    <lastmod>2016-11-11T20:44:28+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/elisp/</loc>
+    <lastmod>2016-10-31T18:24:58+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/grub/</loc>
+    <lastmod>2016-10-27T20:44:28+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/racket/</loc>
+    <lastmod>2016-10-27T19:49:49+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/packages/</loc>
+    <lastmod>2016-10-27T19:49:49+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/systemd/</loc>
+    <lastmod>2016-10-27T15:16:28+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/tags/</loc>
+    <lastmod>2017-10-29T11:09:40+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/authors/</loc>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/tags/config/</loc>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/categories/linux/</loc>
+    <lastmod>2017-10-29T11:09:40+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/tags/og/</loc>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/page/</loc>
+    <lastmod>2017-09-28T08:00:00+06:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/categories/program/</loc>
+    <lastmod>2017-10-29T11:09:40+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/tags/</loc>
+    <lastmod>2017-10-29T11:09:40+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+</urlset>

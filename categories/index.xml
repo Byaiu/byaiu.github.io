@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Sytrumics</title>
+    <link>http://www.example.com/categories/</link>
+    <description>Recent content in Categories on Sytrumics</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	<atom:link href="http://www.example.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Linux</title>
+      <link>http://www.example.com/categories/linux/</link>
+      <pubDate>Sun, 29 Oct 2017 11:09:40 +0800</pubDate>
+      
+      <guid>http://www.example.com/categories/linux/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Program</title>
+      <link>http://www.example.com/categories/program/</link>
+      <pubDate>Sun, 29 Oct 2017 11:09:40 +0800</pubDate>
+      
+      <guid>http://www.example.com/categories/program/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

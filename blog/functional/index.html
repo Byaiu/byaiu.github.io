@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='List Comprehension 列表解析式对于减少代码行数有着意想不到的作用。列表解析式适用于多重循环中的选择，有助于减少变量的名字，而且让逻辑更加清晰。
+下面代码是在simiki g后执行的一段脚本，意图为把在content目录下的源文件中的图片拷贝到输出目录，这样在生成HTML时就能看到图片了。图片的筛选在列表解析式中完成，用到了多重循环加判断的方式，返回了(源目录，目标目录，文件名)，然后在一个简单的循环中完成所有的拷贝工作。
+def main(): join = os.path.join def is_pic(name): return name.split(&#39;.&#39;)[-1] in [&#39;jpg&#39;, &#39;jpeg&#39;, &#39;svg&#39;, &#39;png&#39;] images = [ (join(&#39;content&#39;, folder, topic), join(&#39;output&#39;, folder, topic), img) for folder in os.listdir(&#39;content&#39;) for topic in os.listdir(join(&#39;content&#39;, folder)) if topic == &#39;pic&#39; for img in os.listdir(join(&#39;content&#39;, folder, topic)) if is_pic(img)] for src, dst, name in images: os.makedirs(dst, mode = 0o777, exist_ok = True) shutil.copy(join(src, name), join(dst, name)) 其实真正的拷贝工作也可以定义一个函数real_copy(src, dst, name)，再map(real_copy, images)。这也算是函数式的一种应用。'>
+
+<meta property='og:title' content='Python Functional Programming ⋆ Sytrumics'>
+<meta property='og:description' content='List Comprehension 列表解析式对于减少代码行数有着意想不到的作用。列表解析式适用于多重循环中的选择，有助于减少变量的名字，而且让逻辑更加清晰。
+下面代码是在simiki g后执行的一段脚本，意图为把在content目录下的源文件中的图片拷贝到输出目录，这样在生成HTML时就能看到图片了。图片的筛选在列表解析式中完成，用到了多重循环加判断的方式，返回了(源目录，目标目录，文件名)，然后在一个简单的循环中完成所有的拷贝工作。
+def main(): join = os.path.join def is_pic(name): return name.split(&#39;.&#39;)[-1] in [&#39;jpg&#39;, &#39;jpeg&#39;, &#39;svg&#39;, &#39;png&#39;] images = [ (join(&#39;content&#39;, folder, topic), join(&#39;output&#39;, folder, topic), img) for folder in os.listdir(&#39;content&#39;) for topic in os.listdir(join(&#39;content&#39;, folder)) if topic == &#39;pic&#39; for img in os.listdir(join(&#39;content&#39;, folder, topic)) if is_pic(img)] for src, dst, name in images: os.makedirs(dst, mode = 0o777, exist_ok = True) shutil.copy(join(src, name), join(dst, name)) 其实真正的拷贝工作也可以定义一个函数real_copy(src, dst, name)，再map(real_copy, images)。这也算是函数式的一种应用。'>
+<meta property='og:url' content='http://www.example.com/blog/functional/'>
+<meta property='og:site_name' content='Sytrumics'>
+<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:published_time' content='2016-11-23T20:44:28&#43;08:00'/><meta property='article:modified_time' content='2016-11-23T20:44:28&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+  <title>Python Functional Programming ⋆ Sytrumics</title>
+  <link rel='canonical' href='http://www.example.com/blog/functional/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-blog'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/blog/'>Blog</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Sytrumics</p>
+          
+          <p class='site-description subtitle'>Hi, welcome to my blog.</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Python Functional Programming</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2016-11-23T20:44:28&#43;08:00'>2016, Nov 23</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+One min read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<h1 id="list-comprehension">List Comprehension</h1>
+
+<p>列表解析式对于减少代码行数有着意想不到的作用。列表解析式适用于多重循环中的选择，有助于减少变量的名字，而且让逻辑更加清晰。</p>
+
+<p>下面代码是在<code>simiki g</code>后执行的一段脚本，意图为把在content目录下的源文件中的图片拷贝到输出目录，这样在生成HTML时就能看到图片了。图片的筛选在列表解析式中完成，用到了多重循环加判断的方式，返回了(源目录，目标目录，文件名)，然后在一个简单的循环中完成所有的拷贝工作。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+    join <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">is_pic</span>(name):
+        <span style="color:#66d9ef">return</span> name<span style="color:#f92672">.</span>split(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;.&#39;</span>)[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">in</span> [<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;jpg&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;jpeg&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;svg&#39;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;png&#39;</span>]
+    images <span style="color:#f92672">=</span> [ (join(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;content&#39;</span>, folder, topic), join(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;output&#39;</span>, folder, topic), img)
+                <span style="color:#66d9ef">for</span> folder <span style="color:#f92672">in</span> os<span style="color:#f92672">.</span>listdir(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;content&#39;</span>)
+                <span style="color:#66d9ef">for</span> topic <span style="color:#f92672">in</span> os<span style="color:#f92672">.</span>listdir(join(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;content&#39;</span>, folder)) 
+                    <span style="color:#66d9ef">if</span> topic <span style="color:#f92672">==</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;pic&#39;</span>
+                <span style="color:#66d9ef">for</span> img <span style="color:#f92672">in</span> os<span style="color:#f92672">.</span>listdir(join(<span style="color:#e6db74"></span><span style="color:#e6db74">&#39;content&#39;</span>, folder, topic)) 
+                    <span style="color:#66d9ef">if</span> is_pic(img)]
+    <span style="color:#66d9ef">for</span> src, dst, name <span style="color:#f92672">in</span> images:
+        os<span style="color:#f92672">.</span>makedirs(dst, mode <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>o777, exist_ok <span style="color:#f92672">=</span> True)
+        shutil<span style="color:#f92672">.</span>copy(join(src, name), join(dst, name))</code></pre></div>
+<p>其实真正的拷贝工作也可以定义一个函数<code>real_copy(src, dst, name)</code>，再<code>map(real_copy, images)</code>。这也算是函数式的一种应用。</p>
+
+<h1 id="function-compose">Function Compose</h1>
+
+<p>在ocaml中有这样的代码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ocaml" data-lang="ocaml"><span style="color:#66d9ef">let</span> <span style="color:#f92672">(|&gt;)</span> x f <span style="color:#f92672">=</span> f x<span style="color:#f92672">;;</span>
+<span style="color:#66d9ef">let</span> final <span style="color:#f92672">=</span> data_in <span style="color:#f92672">|&gt;</span> fun1 <span style="color:#f92672">|&gt;</span> fun2<span style="color:#f92672">;;</span></code></pre></div>
+<p>这样只要提供初始输入，就可以用一系列函数来流水线加工输入得到最后的输出。这比较符合我们的思考过程，有助于减少中间变量的个数，也容易看出逻辑过程。在Python中要如何实现这个功能？如果只是一个函数的List依次调用的话，类型的保障就需要自行解决，而且涉及到打包解包的过程，考虑的东西就多了起来。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fun1</span>(x):
+    <span style="color:#66d9ef">return</span> x <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fun2</span>(x)<span style="color:#960050;background-color:#1e0010">：</span>
+    <span style="color:#66d9ef">return</span> x <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>
+
+funs <span style="color:#f92672">=</span> [fun1, fun2]
+
+out <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+<span style="color:#66d9ef">for</span> f <span style="color:#f92672">in</span> funs: out <span style="color:#f92672">=</span> f(out)</code></pre></div>
+<p>从stackoverflow的<a href="http://stackoverflow.com/questions/16739290/composing-functions-in-python" target="_blank">讨论</a>上，有如下的代码能够解决单参数的情形：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">compose</span> (<span style="color:#f92672">*</span>functions):
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">inner</span>(arg):
+        <span style="color:#66d9ef">for</span> f <span style="color:#f92672">in</span> reversed(functions):
+            arg <span style="color:#f92672">=</span> f(arg)
+        <span style="color:#66d9ef">return</span> arg
+    <span style="color:#66d9ef">return</span> inner</code></pre></div>
+<p>值得注意的是循环中的<code>reversed</code>。在组合函数的时候，最先调用的是最后被组合的，所以需要把我们传入的函数列表倒排一下，然后就可以正确调用。</p>
+
+<p>一个解决办法就是把所有的参数都封装到一个tuple之中，也返回tuple。</p>
+
+<p>在<a href="https://mathieularose.com/function-composition-in-python/" target="_blank">MathieuLarose</a>博客中，有更简便的写法。这个方法也涉及到调用顺序的问题，在这里稍微做了一下修改，以符合pipeline的顺序。（原实现的顺序是相反的）</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> functools
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">compose</span>(<span style="color:#f92672">*</span>functions):
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">compose2</span>(f, g):
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">lambda</span> x: g(f(x))
+    <span style="color:#66d9ef">return</span> functools<span style="color:#f92672">.</span>reduce(compose2, functions, <span style="color:#66d9ef">lambda</span> x: x)</code></pre></div>
+<p>或者都用lambda，这个非常简练，但是不容易看懂。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">compose</span>(<span style="color:#f92672">*</span>functions):
+    <span style="color:#66d9ef">return</span> functools<span style="color:#f92672">.</span>reduce(<span style="color:#66d9ef">lambda</span> f, g: <span style="color:#66d9ef">lambda</span> x: g(f(x)), functions, <span style="color:#66d9ef">lambda</span> x: x)</code></pre></div>
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/blog/hardware/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Hardware Related</a>
+    </div><div class='next-entry'>
+      <a href='/blog/continuation/'>
+        <span class='screen-reader'>Next post: </span>Continuation<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/byaiu' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:byaiuwd@outlook.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+      Byaiu &copy; 2017 Sytrumic 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

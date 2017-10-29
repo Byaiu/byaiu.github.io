@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='有同学请我帮忙处理一个数据文件，里面有多个公司股价历史的文件（乱序排列），要求是编写一个程序(不限语言，但最好能在mac/linux下运行), 读取这个文件并返回增长最多的那只股票的名称及增值（输出到终端也可），需要注意的是数据中包含不规则的无效数据。
+这是一个CSV文件，这里截取了前几行：
+   Name Date notes Value Change     PGC 2015-11-7 notes 600.61 INCREASED   RHS 2015-10-5 notes 202.97 DECREASED   KCT 2015-7-20 notes 914.96 NEW   DLV 2015-9-12 notes 479.16 DECREASED   ABU 2015-8-19 notes 725.18 DECREASED   WHJ 2015-7-14 notes 795.78 DECREASED   ARA 2015-8-12 notes 470.80 INCREASED   WYO 2015-8-3 notes &ndash; UNKNOWN    文件并不大，1M都不到，用Excel来处理完全是绰绰有余。但确实提出来了在Linux下的需求，是不是用一个Python脚本呢？如果是的话，思路也很清晰。Python自带了CSV的解析库，只需要做一个简单的List的filter和sort，再加一点逻辑就可以了。'>
+
+<meta property='og:title' content='AWK数据处理 ⋆ Sytrumics'>
+<meta property='og:description' content='有同学请我帮忙处理一个数据文件，里面有多个公司股价历史的文件（乱序排列），要求是编写一个程序(不限语言，但最好能在mac/linux下运行), 读取这个文件并返回增长最多的那只股票的名称及增值（输出到终端也可），需要注意的是数据中包含不规则的无效数据。
+这是一个CSV文件，这里截取了前几行：
+   Name Date notes Value Change     PGC 2015-11-7 notes 600.61 INCREASED   RHS 2015-10-5 notes 202.97 DECREASED   KCT 2015-7-20 notes 914.96 NEW   DLV 2015-9-12 notes 479.16 DECREASED   ABU 2015-8-19 notes 725.18 DECREASED   WHJ 2015-7-14 notes 795.78 DECREASED   ARA 2015-8-12 notes 470.80 INCREASED   WYO 2015-8-3 notes &ndash; UNKNOWN    文件并不大，1M都不到，用Excel来处理完全是绰绰有余。但确实提出来了在Linux下的需求，是不是用一个Python脚本呢？如果是的话，思路也很清晰。Python自带了CSV的解析库，只需要做一个简单的List的filter和sort，再加一点逻辑就可以了。'>
+<meta property='og:url' content='http://www.example.com/blog/awk/'>
+<meta property='og:site_name' content='Sytrumics'>
+<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:published_time' content='2016-11-25T20:44:28&#43;08:00'/><meta property='article:modified_time' content='2016-11-25T20:44:28&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+  <title>AWK数据处理 ⋆ Sytrumics</title>
+  <link rel='canonical' href='http://www.example.com/blog/awk/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-blog'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/blog/'>Blog</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Sytrumics</p>
+          
+          <p class='site-description subtitle'>Hi, welcome to my blog.</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>AWK数据处理</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2016-11-25T20:44:28&#43;08:00'>2016, Nov 25</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+One min read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  <p>有同学请我帮忙处理一个数据文件，里面有多个公司股价历史的文件（乱序排列），要求是编写一个程序(不限语言，但最好能在mac/linux下运行), 读取这个文件并返回增长最多的那只股票的名称及增值（输出到终端也可），需要注意的是数据中包含不规则的无效数据。</p>
+
+<p>这是一个CSV文件，这里截取了前几行：</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Date</th>
+<th align="left">notes</th>
+<th align="left">Value</th>
+<th align="left">Change</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">PGC</td>
+<td align="left">2015-11-7</td>
+<td align="left">notes</td>
+<td align="left">600.61</td>
+<td align="left">INCREASED</td>
+</tr>
+
+<tr>
+<td align="left">RHS</td>
+<td align="left">2015-10-5</td>
+<td align="left">notes</td>
+<td align="left">202.97</td>
+<td align="left">DECREASED</td>
+</tr>
+
+<tr>
+<td align="left">KCT</td>
+<td align="left">2015-7-20</td>
+<td align="left">notes</td>
+<td align="left">914.96</td>
+<td align="left">NEW</td>
+</tr>
+
+<tr>
+<td align="left">DLV</td>
+<td align="left">2015-9-12</td>
+<td align="left">notes</td>
+<td align="left">479.16</td>
+<td align="left">DECREASED</td>
+</tr>
+
+<tr>
+<td align="left">ABU</td>
+<td align="left">2015-8-19</td>
+<td align="left">notes</td>
+<td align="left">725.18</td>
+<td align="left">DECREASED</td>
+</tr>
+
+<tr>
+<td align="left">WHJ</td>
+<td align="left">2015-7-14</td>
+<td align="left">notes</td>
+<td align="left">795.78</td>
+<td align="left">DECREASED</td>
+</tr>
+
+<tr>
+<td align="left">ARA</td>
+<td align="left">2015-8-12</td>
+<td align="left">notes</td>
+<td align="left">470.80</td>
+<td align="left">INCREASED</td>
+</tr>
+
+<tr>
+<td align="left">WYO</td>
+<td align="left">2015-8-3</td>
+<td align="left">notes</td>
+<td align="left">&ndash;</td>
+<td align="left">UNKNOWN</td>
+</tr>
+</tbody>
+</table>
+
+<p>文件并不大，1M都不到，用Excel来处理完全是绰绰有余。但确实提出来了在Linux下的需求，是不是用一个Python脚本呢？如果是的话，思路也很清晰。Python自带了CSV的解析库，只需要做一个简单的List的filter和sort，再加一点逻辑就可以了。</p>
+
+<p>不过，既然是在Linux下，已经有前人写好的无数的小工具可以用，为何不借此来学习一下呢？如果是比较规则的文件，AWK的按列操纵的特性一定大有用武之地。但用AWK的前提是，需要对数据进行一些规整处理，排除无效数据。所以从下面几个方面入手：</p>
+
+<ol>
+<li>日期数据的规范化</li>
+<li>无效数据的排除</li>
+<li>首行的处理</li>
+</ol>
+
+<p>仔细观察数据后，很容易发现2和3其实是伪需求。只要利用第5列的特征：只包含&rdquo;INCREASE&rdquo;, &ldquo;DECREASE&rdquo;, &ldquo;NEW&rdquo;, &ldquo;UNKNOWN&rdquo;这四种数据，就可以轻松的排除掉2和3所代表的行；而这对AWK来说只需要写特定的规则就好。</p>
+
+<p>日期的规范化稍微有点难做，好在AWK可以自定义函数。在查阅了AWK的文档后，这个问题也顺利解决。最后的脚本是这样的：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-awk" data-lang="awk">BEGIN {
+	FS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;,&#34;</span>;
+}
+
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">dash2num</span>(<span style="color:#a6e22e">input</span>) {
+	<span style="color:#66d9ef">split</span>(<span style="color:#a6e22e">input</span>, <span style="color:#a6e22e">a</span>, <span style="color:#e6db74">&#34;-&#34;</span>, <span style="color:#a6e22e">seps</span>);
+	<span style="color:#a6e22e">output</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">sprintf</span>(<span style="color:#e6db74">&#34;%d%02d%02d&#34;</span>, <span style="color:#a6e22e">a</span>[<span style="color:#ae81ff">1</span>], <span style="color:#a6e22e">a</span>[<span style="color:#ae81ff">2</span>], <span style="color:#a6e22e">a</span>[<span style="color:#ae81ff">3</span>]);
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">output</span>;
+}
+
+<span style="color:#e6db74">/NEW/</span> {
+	<span style="color:#75715e"># 保存该股票最开始的价格</span>
+	<span style="color:#a6e22e">new_</span>[<span style="color:#f92672">$</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#f92672">$</span><span style="color:#ae81ff">4</span>;
+}
+
+<span style="color:#e6db74">/INCREASED/</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">/DECREASED/</span> {
+	<span style="color:#a6e22e">cur_date</span><span style="color:#960050;background-color:#1e0010">:</span> <span style="color:#a6e22e">dash2num</span>(<span style="color:#f92672">$</span><span style="color:#ae81ff">2</span>);
+	<span style="color:#75715e"># 因为是乱序，要记录当前的日期用以比较</span>
+	<span style="color:#66d9ef">if</span> (<span style="color:#f92672">$</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">in</span> <span style="color:#a6e22e">date_</span>) {
+		<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">cur_date</span> <span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">date_</span>[<span style="color:#f92672">$</span><span style="color:#ae81ff">1</span>]) {
+			<span style="color:#75715e"># 该股票最后日期的股价</span>
+			<span style="color:#a6e22e">date_</span>[<span style="color:#f92672">$</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">cur_date</span>;
+			<span style="color:#a6e22e">value_</span>[<span style="color:#f92672">$</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#f92672">$</span><span style="color:#ae81ff">4</span>;
+		}
+	} <span style="color:#66d9ef">else</span> {
+		<span style="color:#75715e"># 只是为了防止股票第一次出现时出现错误的逻辑</span>
+		<span style="color:#a6e22e">date_</span>[<span style="color:#f92672">$</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">cur_date</span>;
+		<span style="color:#a6e22e">value_</span>[<span style="color:#f92672">$</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#f92672">$</span><span style="color:#ae81ff">4</span>;
+	}
+}
+
+END {
+	<span style="color:#66d9ef">for</span> (<span style="color:#a6e22e">e</span> <span style="color:#f92672">in</span> <span style="color:#a6e22e">date_</span>) {
+		<span style="color:#75715e"># 输出到屏幕，供后续使用</span>
+		<span style="color:#66d9ef">print</span> <span style="color:#a6e22e">e</span>, <span style="color:#e6db74">&#34;\t&#34;</span>, <span style="color:#a6e22e">value_</span>[<span style="color:#a6e22e">e</span>] <span style="color:#f92672">-</span> <span style="color:#a6e22e">new_</span>[<span style="color:#a6e22e">e</span>];
+	}
+}</code></pre></div>
+<p>执行脚本之后，输出两列，分别是股票名称和增值。现在就可以利用Linux自带的sort来排序了。那么要怎么使用呢？</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">awk -f script.awk values.csv | sort -nr -k <span style="color:#ae81ff">2</span> | head -10</code></pre></div>
+<p>Done!</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/blog/continuation/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Continuation</a>
+    </div><div class='next-entry'>
+      <a href='/blog/latex/'>
+        <span class='screen-reader'>Next post: </span>Latex<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/byaiu' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:byaiuwd@outlook.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+      Byaiu &copy; 2017 Sytrumic 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

@@ -17,8 +17,10 @@
       
       <guid>http://www.example.com/blog/dtrace/</guid>
       <description>dtrace的由来 听过一些八卦，意思是Sun的Solaris有很多杀手级的特点，比如说ZFS，还有一个就是DTrace，这些特点都让Linux的玩家们羡慕不已。DTrace可以在运行时注入一段自定义代码来完成某些信息的搜集和处理，这段代码是可以被验证的，可以保证不会损害系统的安全性。
-Linux上实现内核代码注入的方式应该也有不少，我听过并且理解的有kprobe。不过近几年来Linux Kernel里的BPF(Berkeley Packet Filter)也提供了这样的能力。BPF提供了一个比较简便的虚拟机，用于执行一段特殊的代码，通过代码的执行，就可以判定这个数据包是否可以被接受。
-相关资料 其实最重要的资料就是Kernel自带的Documentation了：networking/filter.txt，在其中阐述了BPF的由来，指令的设计、验证，以及map的使用方式等。</description>
+Linux上实现内核代码注入的方式应该也有不少，我听过并且理解的有kprobe。不过近几年来Linux Kernel里的BPF(Berkeley Packet Filter)也提供了这样的能力。BPF提供了一个比较简便的虚拟机，用于执行一段特殊的代码，通过代码的执行，就可以判定这个数据包是否可以被接受。所以社区的大牛们就开始利用BPF做一些动态追踪的事情，将perf、kprobde等与BPF联系起来，并将这一系列的开发称为Linux上的DTrace。
+相关资料 最重要的资料就是Kernel自带的Documentation：networking/filter.txt，其中阐述了BPF的由来，指令的设计、验证，以及map的使用方式等。
+Internel 本来只有一种BPF，但Linux的内部使用了另一个更加强大的指令集，所以Linux现在的BPF被称为eBPF，或者&amp;rdquo;internel BPF&amp;rdquo;，这意味着可以把本来的BPF code送入内核，内核自己会完成转译。新的eBPF拥有10个寄存器（原来只有2个），寄存器的位宽由32bit扩展到了64bit，而且最重要的是引入了bpf_call指令，可以无开销的调用内核函数，这使得BPF的能力得到了极大的扩充。注入的代码会经过验证，以保证不访问不该访问的地址区域，并且代码的长度有所限制，也不会出现循环。
+eBPF map map是存储数据的地方，这个map的使用方式和OpenGL里VBO有些类似：先要申请一块内存，返回标识符（这里就是fd），再通过标识符进行一系列的操作，最后再销毁。map是BPF与用户空间进行数据交互的地方，内核写，用户空间读，而写的过程由注入的代码控制。说道这里，应该对BPF的能力和原理有了大致的了解了。</description>
     </item>
     
     <item>

@@ -4,10 +4,12 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='dtrace的由来 听过一些八卦，意思是Sun的Solaris有很多杀手级的特点，比如说ZFS，还有一个就是DTrace，这些特点都让Linux的玩家们羡慕不已。DTrace可以在运行时注入一段自定义代码来完成某些信息的搜集和处理，而且这段代码是可以被验证的，可以保证不会损害系统的安全性。'>
+<meta name='description' content='dtrace的由来 听过一些八卦，意思是Sun的Solaris有很多杀手级的特点，比如说ZFS，还有一个就是DTrace，这些特点都让Linux的玩家们羡慕不已。DTrace可以在运行时注入一段自定义代码来完成某些信息的搜集和处理，而且这段代码是可以被验证的，可以保证不会损害系统的安全性。
+Linux上实现内核代码注入的方式应该也有不少，我听过并且理解的有kprobe。'>
 
 <meta property='og:title' content='Dtrace in linux ⋆ Sytrumics'>
-<meta property='og:description' content='dtrace的由来 听过一些八卦，意思是Sun的Solaris有很多杀手级的特点，比如说ZFS，还有一个就是DTrace，这些特点都让Linux的玩家们羡慕不已。DTrace可以在运行时注入一段自定义代码来完成某些信息的搜集和处理，而且这段代码是可以被验证的，可以保证不会损害系统的安全性。'>
+<meta property='og:description' content='dtrace的由来 听过一些八卦，意思是Sun的Solaris有很多杀手级的特点，比如说ZFS，还有一个就是DTrace，这些特点都让Linux的玩家们羡慕不已。DTrace可以在运行时注入一段自定义代码来完成某些信息的搜集和处理，而且这段代码是可以被验证的，可以保证不会损害系统的安全性。
+Linux上实现内核代码注入的方式应该也有不少，我听过并且理解的有kprobe。'>
 <meta property='og:url' content='http://www.example.com/blog/dtrace/'>
 <meta property='og:site_name' content='Sytrumics'>
 <meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:published_time' content='2017-10-29T11:09:40&#43;08:00'/><meta property='article:modified_time' content='2017-10-29T11:09:40&#43;08:00'/><meta name='twitter:card' content='summary'>
@@ -106,6 +108,8 @@ One min read
 <h1 id="dtrace的由来">dtrace的由来</h1>
 
 <p>听过一些八卦，意思是Sun的Solaris有很多杀手级的特点，比如说ZFS，还有一个就是DTrace，这些特点都让Linux的玩家们羡慕不已。DTrace可以在运行时注入一段自定义代码来完成某些信息的搜集和处理，而且这段代码是可以被验证的，可以保证不会损害系统的安全性。</p>
+
+<p>Linux上实现内核代码注入的方式应该也有不少，我听过并且理解的有kprobe。</p>
 
 </div>
 

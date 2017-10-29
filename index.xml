@@ -38,15 +38,6 @@ Heading 3 Yet another, but centered! Excepteur sint occaecat cupidatat non proid
     </item>
     
     <item>
-      <title>Dtrace in linux</title>
-      <link>http://www.example.com/blog/dtrace/</link>
-      <pubDate>Sun, 29 Oct 2017 11:09:40 +0800</pubDate>
-      
-      <guid>http://www.example.com/blog/dtrace/</guid>
-      <description>dtrace on linux 这一段时间在Intel实习，做Linux相关的事情。</description>
-    </item>
-    
-    <item>
       <title>Postscript</title>
       <link>http://www.example.com/blog/postscript/</link>
       <pubDate>Sun, 01 Jan 2017 19:49:49 +0800</pubDate>

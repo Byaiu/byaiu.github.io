@@ -4,15 +4,17 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='dtrace的由来 听过一些八卦，意思是Sun的Solaris有很多杀手级的特点，比如说ZFS，还有一个就是DTrace，这些特点都让Linux的玩家们羡慕不已。DTrace可以在运行时注入一段自定义代码来完成某些信息的搜集和处理，而且这段代码是可以被验证的，可以保证不会损害系统的安全性。
-Linux上实现内核代码注入的方式应该也有不少，我听过并且理解的有kprobe。'>
+<meta name='description' content='dtrace的由来 听过一些八卦，意思是Sun的Solaris有很多杀手级的特点，比如说ZFS，还有一个就是DTrace，这些特点都让Linux的玩家们羡慕不已。DTrace可以在运行时注入一段自定义代码来完成某些信息的搜集和处理，这段代码是可以被验证的，可以保证不会损害系统的安全性。
+Linux上实现内核代码注入的方式应该也有不少，我听过并且理解的有kprobe。不过近几年来Linux Kernel里的BPF(Berkeley Packet Filter)也提供了这样的能力。BPF提供了一个比较简便的虚拟机，用于执行一段特殊的代码，通过代码的执行，就可以判定这个数据包是否可以被接受。
+相关资料 其实最重要的资料就是Kernel自带的Documentation了：networking/filter.txt，在其中阐述了BPF的由来，指令的设计、验证，以及map的使用方式等。'>
 
 <meta property='og:title' content='Dtrace in linux ⋆ Sytrumics'>
-<meta property='og:description' content='dtrace的由来 听过一些八卦，意思是Sun的Solaris有很多杀手级的特点，比如说ZFS，还有一个就是DTrace，这些特点都让Linux的玩家们羡慕不已。DTrace可以在运行时注入一段自定义代码来完成某些信息的搜集和处理，而且这段代码是可以被验证的，可以保证不会损害系统的安全性。
-Linux上实现内核代码注入的方式应该也有不少，我听过并且理解的有kprobe。'>
+<meta property='og:description' content='dtrace的由来 听过一些八卦，意思是Sun的Solaris有很多杀手级的特点，比如说ZFS，还有一个就是DTrace，这些特点都让Linux的玩家们羡慕不已。DTrace可以在运行时注入一段自定义代码来完成某些信息的搜集和处理，这段代码是可以被验证的，可以保证不会损害系统的安全性。
+Linux上实现内核代码注入的方式应该也有不少，我听过并且理解的有kprobe。不过近几年来Linux Kernel里的BPF(Berkeley Packet Filter)也提供了这样的能力。BPF提供了一个比较简便的虚拟机，用于执行一段特殊的代码，通过代码的执行，就可以判定这个数据包是否可以被接受。
+相关资料 其实最重要的资料就是Kernel自带的Documentation了：networking/filter.txt，在其中阐述了BPF的由来，指令的设计、验证，以及map的使用方式等。'>
 <meta property='og:url' content='http://www.example.com/blog/dtrace/'>
 <meta property='og:site_name' content='Sytrumics'>
-<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:published_time' content='2017-10-29T11:09:40&#43;08:00'/><meta property='article:modified_time' content='2017-10-29T11:09:40&#43;08:00'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:tag' content='program'><meta property='article:tag' content='linux'><meta property='article:published_time' content='2017-10-29T11:09:40&#43;08:00'/><meta property='article:modified_time' content='2017-10-29T11:09:40&#43;08:00'/><meta name='twitter:card' content='summary'>
 
 <meta name="generator" content="Hugo 0.30.2" />
 
@@ -107,23 +109,28 @@ One min read
 
 <h1 id="dtrace的由来">dtrace的由来</h1>
 
-<p>听过一些八卦，意思是Sun的Solaris有很多杀手级的特点，比如说ZFS，还有一个就是DTrace，这些特点都让Linux的玩家们羡慕不已。DTrace可以在运行时注入一段自定义代码来完成某些信息的搜集和处理，而且这段代码是可以被验证的，可以保证不会损害系统的安全性。</p>
+<p>听过一些八卦，意思是Sun的Solaris有很多杀手级的特点，比如说ZFS，还有一个就是DTrace，这些特点都让Linux的玩家们羡慕不已。DTrace可以在运行时注入一段自定义代码来完成某些信息的搜集和处理，这段代码是可以被验证的，可以保证不会损害系统的安全性。</p>
 
-<p>Linux上实现内核代码注入的方式应该也有不少，我听过并且理解的有kprobe。</p>
+<p>Linux上实现内核代码注入的方式应该也有不少，我听过并且理解的有kprobe。不过近几年来Linux Kernel里的BPF(Berkeley Packet Filter)也提供了这样的能力。BPF提供了一个比较简便的虚拟机，用于执行一段特殊的代码，通过代码的执行，就可以判定这个数据包是否可以被接受。</p>
+
+<h1 id="相关资料">相关资料</h1>
+
+<p>其实最重要的资料就是Kernel自带的Documentation了：<a href="https://github.com/torvalds/linux/blob/master/Documentation/networking/filter.txt" target="_blank">networking/filter.txt</a>，在其中阐述了BPF的由来，指令的设计、验证，以及map的使用方式等。</p>
 
 </div>
 
     
 <footer class='entry-footer-container'>
   <div class='entry-footer'>
-  <div class='categories'>
+  <div class='tags'>
   <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
-  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
   
 </svg>
 </span>
-  <span class='screen-reader'>Categories: </span><a class='category' href='/categories/program'>Program</a>, <a class='category' href='/categories/linux'>Linux</a></div>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/program'>Program</a>, <a class='tag' href='/tags/linux'>Linux</a></div>
 
   </div>
 </footer>

@@ -14,11 +14,16 @@
   
   <url>
     <loc>http://www.example.com/blog/</loc>
-    <lastmod>2017-10-29T11:09:40+08:00</lastmod>
+    <lastmod>2017-10-31T21:29:37+08:00</lastmod>
   </url>
   
   <url>
     <loc>http://www.example.com/about/</loc>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/blog/clang-llvm/</loc>
+    <lastmod>2017-10-31T21:29:37+08:00</lastmod>
   </url>
   
   <url>
@@ -115,6 +120,12 @@
   </url>
   
   <url>
+    <loc>http://www.example.com/tags/dtrace/</loc>
+    <lastmod>2017-10-31T21:29:37+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://www.example.com/tags/linux/</loc>
     <lastmod>2017-10-29T11:09:40+08:00</lastmod>
     <priority>0</priority>
@@ -138,7 +149,7 @@
   
   <url>
     <loc>http://www.example.com/tags/</loc>
-    <lastmod>2017-10-29T11:09:40+08:00</lastmod>
+    <lastmod>2017-10-31T21:29:37+08:00</lastmod>
     <priority>0</priority>
   </url>
   

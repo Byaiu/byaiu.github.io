@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='在看 bcc 的时候，得知了bcc里的C语言程序其实是编译到eBPF程序的。这个过程当然不是由Python或Lua来做的，而是利用了Clang和 LLVM完成的。LLVM有BPF的后端，估计也是专门为了内核加进去的。这几天稍微看了看Clang和LLVM，搭建环境的过程还是很繁复的。最初 的想法是直接用发行版装好的LLVM，然后自己添加include目录和链接库的目录，并自己指定链接的库，但是一整天都没搞好。不得不说 这种无谓之功还是很让人恼火的。最后还是照着官方的建议，download再编译。在实验室试了一下Ubuntu的编译，经过折腾LLVM和Clang 都好了；回到寝室则在Windows尝试了一下，只能用LLVM的例子。特此做个记录。
+Prerequisite 需要装的软件
+ cmake python  Ubuntu上搭建  从官网上下载llvm与clang的源码，将clang解压至llvm/tools/clang之中，可以自动build clang。
+ 实际build。根据自己机器的配置来。我借用了后面小哥的服务器，32个核，128G的内存。编译这两个东西耗费巨大，高峰的时候吞掉了将近70G的内存。因为同时编译的太多，而最后link的时候就特别占用地方。自己的破电脑上到最后一步就很卡，直接崩了。
+# cmake惯用法 $ mkdir build $ cd build $ cmake .. $ make -j32 怎么运行例子？ 我一直头疼cmake的用法，build之后什么也找不到。后来我不知道在哪里看到在buid目录下直接make target，就能在bin下找到可执行文件了。 所以，如果要自己做一个新的项目，最好的方法就是
+ 复制example下面的一个目录，改成自己的名字asdf 修改example下的CMakelists.txt，添加新的目录asdf 修改asdf/CMakelists.txt 重新cmake，这样在build目录下就可以make asdf从而得到新的bin。   Windows上搭建 为了方便，就安装prebuild的cmake。打开cmake-gui.exe。
+需要配置一下PYTHON的PATH。它其实自己会提醒的。
+然后Configure，Generate，然后就能打开Visual Studio写代码了。至于怎么新建自己的工程，这个套路就和Ubuntu一样了，新建文件夹，修改，再重新cmake。'>
+
+<meta property='og:title' content='Clang&#43;LLVM折腾记 ⋆ Sytrumics'>
+<meta property='og:description' content='在看 bcc 的时候，得知了bcc里的C语言程序其实是编译到eBPF程序的。这个过程当然不是由Python或Lua来做的，而是利用了Clang和 LLVM完成的。LLVM有BPF的后端，估计也是专门为了内核加进去的。这几天稍微看了看Clang和LLVM，搭建环境的过程还是很繁复的。最初 的想法是直接用发行版装好的LLVM，然后自己添加include目录和链接库的目录，并自己指定链接的库，但是一整天都没搞好。不得不说 这种无谓之功还是很让人恼火的。最后还是照着官方的建议，download再编译。在实验室试了一下Ubuntu的编译，经过折腾LLVM和Clang 都好了；回到寝室则在Windows尝试了一下，只能用LLVM的例子。特此做个记录。
+Prerequisite 需要装的软件
+ cmake python  Ubuntu上搭建  从官网上下载llvm与clang的源码，将clang解压至llvm/tools/clang之中，可以自动build clang。
+ 实际build。根据自己机器的配置来。我借用了后面小哥的服务器，32个核，128G的内存。编译这两个东西耗费巨大，高峰的时候吞掉了将近70G的内存。因为同时编译的太多，而最后link的时候就特别占用地方。自己的破电脑上到最后一步就很卡，直接崩了。
+# cmake惯用法 $ mkdir build $ cd build $ cmake .. $ make -j32 怎么运行例子？ 我一直头疼cmake的用法，build之后什么也找不到。后来我不知道在哪里看到在buid目录下直接make target，就能在bin下找到可执行文件了。 所以，如果要自己做一个新的项目，最好的方法就是
+ 复制example下面的一个目录，改成自己的名字asdf 修改example下的CMakelists.txt，添加新的目录asdf 修改asdf/CMakelists.txt 重新cmake，这样在build目录下就可以make asdf从而得到新的bin。   Windows上搭建 为了方便，就安装prebuild的cmake。打开cmake-gui.exe。
+需要配置一下PYTHON的PATH。它其实自己会提醒的。
+然后Configure，Generate，然后就能打开Visual Studio写代码了。至于怎么新建自己的工程，这个套路就和Ubuntu一样了，新建文件夹，修改，再重新cmake。'>
+<meta property='og:url' content='http://www.example.com/blog/clang-llvm/'>
+<meta property='og:site_name' content='Sytrumics'>
+<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:tag' content='dtrace'><meta property='article:published_time' content='2017-10-31T21:29:37&#43;08:00'/><meta property='article:modified_time' content='2017-10-31T21:29:37&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+  <title>Clang&#43;LLVM折腾记 ⋆ Sytrumics</title>
+  <link rel='canonical' href='http://www.example.com/blog/clang-llvm/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-blog'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/blog/'>Blog</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Sytrumics</p>
+          
+          <p class='site-description subtitle'>Hi, welcome to my blog.</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Clang&#43;LLVM折腾记</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-10-31T21:29:37&#43;08:00'>2017, Oct 31</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+One min read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>在看 <a href="https://github.com/iovisor/bcc" target="_blank">bcc</a> 的时候，得知了bcc里的C语言程序其实是编译到eBPF程序的。这个过程当然不是由Python或Lua来做的，而是利用了Clang和
+LLVM完成的。LLVM有BPF的后端，估计也是专门为了内核加进去的。这几天稍微看了看Clang和LLVM，搭建环境的过程还是很繁复的。最初
+的想法是直接用发行版装好的LLVM，然后自己添加include目录和链接库的目录，并自己指定链接的库，但是一整天都没搞好。不得不说
+这种无谓之功还是很让人恼火的。最后还是照着官方的建议，download再编译。在实验室试了一下Ubuntu的编译，经过折腾LLVM和Clang
+都好了；回到寝室则在Windows尝试了一下，只能用LLVM的例子。特此做个记录。</p>
+
+<h2 id="prerequisite">Prerequisite</h2>
+
+<p>需要装的软件</p>
+
+<ul>
+<li>cmake</li>
+<li>python</li>
+</ul>
+
+<h2 id="ubuntu上搭建">Ubuntu上搭建</h2>
+
+<ul>
+<li><p>从官网上下载llvm与clang的源码，将clang解压至<code>llvm/tools/clang</code>之中，可以自动build clang。</p></li>
+
+<li><p>实际build。根据自己机器的配置来。我借用了后面小哥的服务器，32个核，128G的内存。编译这两个东西耗费巨大，高峰的时候吞掉了将近70G的内存。因为同时编译的太多，而最后link的时候就特别占用地方。自己的破电脑上到最后一步就很卡，直接崩了。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># cmake惯用法
+</span><span style="color:#75715e"></span>$ mkdir build
+$ cd build
+$ cmake ..
+$ make -j32</code></pre></div></li>
+
+<li><p>怎么运行例子？
+我一直头疼cmake的用法，build之后什么也找不到。后来我不知道在哪里看到在buid目录下直接<code>make target</code>，就能在<code>bin</code>下找到可执行文件了。
+所以，如果要自己做一个新的项目，最好的方法就是</p>
+
+<ul>
+<li>复制example下面的一个目录，改成自己的名字<code>asdf</code></li>
+<li>修改example下的CMakelists.txt，添加新的目录<code>asdf</code></li>
+<li>修改<code>asdf/CMakelists.txt</code></li>
+<li>重新cmake，这样在build目录下就可以<code>make asdf</code>从而得到新的bin。</li>
+</ul></li>
+</ul>
+
+<h2 id="windows上搭建">Windows上搭建</h2>
+
+<p>为了方便，就安装prebuild的cmake。打开<code>cmake-gui.exe</code>。</p>
+
+<p>需要配置一下PYTHON的PATH。它其实自己会提醒的。</p>
+
+<p>然后Configure，Generate，然后就能打开Visual Studio写代码了。至于怎么新建自己的工程，这个套路就和Ubuntu一样了，新建文件夹，修改，再重新cmake。</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/dtrace'>Dtrace</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/blog/dtrace/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Dtrace in linux</a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/byaiu' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:byaiuwd@outlook.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+      Byaiu &copy; 2017 Sytrumic 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dtrace on Sytrumics</title>
+    <link>http://www.example.com/tags/dtrace/</link>
+    <description>Recent content in Dtrace on Sytrumics</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 31 Oct 2017 21:29:37 +0800</lastBuildDate>
+    
+	<atom:link href="http://www.example.com/tags/dtrace/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Clang&#43;LLVM折腾记</title>
+      <link>http://www.example.com/blog/clang-llvm/</link>
+      <pubDate>Tue, 31 Oct 2017 21:29:37 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/clang-llvm/</guid>
+      <description>在看 bcc 的时候，得知了bcc里的C语言程序其实是编译到eBPF程序的。这个过程当然不是由Python或Lua来做的，而是利用了Clang和 LLVM完成的。LLVM有BPF的后端，估计也是专门为了内核加进去的。这几天稍微看了看Clang和LLVM，搭建环境的过程还是很繁复的。最初 的想法是直接用发行版装好的LLVM，然后自己添加include目录和链接库的目录，并自己指定链接的库，但是一整天都没搞好。不得不说 这种无谓之功还是很让人恼火的。最后还是照着官方的建议，download再编译。在实验室试了一下Ubuntu的编译，经过折腾LLVM和Clang 都好了；回到寝室则在Windows尝试了一下，只能用LLVM的例子。特此做个记录。
+Prerequisite 需要装的软件
+ cmake python  Ubuntu上搭建  从官网上下载llvm与clang的源码，将clang解压至llvm/tools/clang之中，可以自动build clang。
+ 实际build。根据自己机器的配置来。我借用了后面小哥的服务器，32个核，128G的内存。编译这两个东西耗费巨大，高峰的时候吞掉了将近70G的内存。因为同时编译的太多，而最后link的时候就特别占用地方。自己的破电脑上到最后一步就很卡，直接崩了。
+# cmake惯用法 $ mkdir build $ cd build $ cmake .. $ make -j32 怎么运行例子？ 我一直头疼cmake的用法，build之后什么也找不到。后来我不知道在哪里看到在buid目录下直接make target，就能在bin下找到可执行文件了。 所以，如果要自己做一个新的项目，最好的方法就是
+ 复制example下面的一个目录，改成自己的名字asdf 修改example下的CMakelists.txt，添加新的目录asdf 修改asdf/CMakelists.txt 重新cmake，这样在build目录下就可以make asdf从而得到新的bin。   Windows上搭建 为了方便，就安装prebuild的cmake。打开cmake-gui.exe。
+需要配置一下PYTHON的PATH。它其实自己会提醒的。
+然后Configure，Generate，然后就能打开Visual Studio写代码了。至于怎么新建自己的工程，这个套路就和Ubuntu一样了，新建文件夹，修改，再重新cmake。</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -16,7 +16,7 @@
       <pubDate>Tue, 31 Oct 2017 21:29:37 +0800</pubDate>
       
       <guid>http://www.example.com/blog/clang-llvm/</guid>
-      <description>在看 bcc 的时候，得知了bcc里的C语言程序其实是编译到eBPF程序的。这个过程当然不是由Python或Lua来做的，而是利用了Clang和 LLVM完成的。LLVM有BPF的后端，估计也是专门为了内核加进去的。这几天稍微看了看Clang和LLVM，搭建环境的过程还是很繁复的。最初 的想法是直接用发行版装好的LLVM，然后自己添加include目录和链接库的目录，并自己指定链接的库，但是一整天都没搞好。不得不说 这种无谓之功还是很让人恼火的。最后还是照着官方的建议，download再编译。在实验室试了一下Ubuntu的编译，经过折腾LLVM和Clang 都好了；回到寝室则在Windows尝试了一下，只能用LLVM的例子。特此做个记录。
+      <description>在看 bcc 的时候，得知了bcc里的C语言程序其实是编译到eBPF程序的。这 个过程当然不是由Python或Lua来做的，而是利用了Clang和LLVM完成的。LLVM有BPF的后端，估计也是专门为了内 核加进去的。这几天稍微看了看Clang和LLVM，搭建环境的过程还是很繁复的。最初的想法是直接用发行版装好的 LLVM，然后自己添加include目录和链接库的目录，并自己指定链接的库，但是一整天都没搞好。不得不说这种无 谓之功还是很让人恼火的。最后还是照着官方的建议，download再编译。在实验室试了一下Ubuntu的编译，经过折 腾LLVM和Clang都好了；回到寝室则在Windows尝试了一下，只能用LLVM的例子。特此做个记录。
 Prerequisite 需要装的软件
  cmake python  Ubuntu上搭建  从官网上下载llvm与clang的源码，将clang解压至llvm/tools/clang之中，可以自动build clang。
  实际build。根据自己机器的配置来。我借用了后面小哥的服务器，32个核，128G的内存。编译这两个东西耗费巨大，高峰的时候吞掉了将近70G的内存。因为同时编译的太多，而最后link的时候就特别占用地方。自己的破电脑上到最后一步就很卡，直接崩了。

@@ -11,6 +11,15 @@
     
     
     <item>
+      <title>Clang</title>
+      <link>http://www.example.com/tags/clang/</link>
+      <pubDate>Tue, 31 Oct 2017 21:29:37 +0800</pubDate>
+      
+      <guid>http://www.example.com/tags/clang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Configuration</title>
       <link>http://www.example.com/tags/config/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -25,6 +34,15 @@
       <pubDate>Tue, 31 Oct 2017 21:29:37 +0800</pubDate>
       
       <guid>http://www.example.com/tags/dtrace/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>LLVM</title>
+      <link>http://www.example.com/tags/llvm/</link>
+      <pubDate>Tue, 31 Oct 2017 21:29:37 +0800</pubDate>
+      
+      <guid>http://www.example.com/tags/llvm/</guid>
       <description></description>
     </item>
     

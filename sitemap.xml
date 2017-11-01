@@ -116,11 +116,23 @@
   </url>
   
   <url>
+    <loc>http://www.example.com/tags/clang/</loc>
+    <lastmod>2017-10-31T21:29:37+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://www.example.com/tags/config/</loc>
   </url>
   
   <url>
     <loc>http://www.example.com/tags/dtrace/</loc>
+    <lastmod>2017-10-31T21:29:37+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://www.example.com/tags/llvm/</loc>
     <lastmod>2017-10-31T21:29:37+08:00</lastmod>
     <priority>0</priority>
   </url>

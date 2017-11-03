@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Emacs on Sytrumics</title>
+    <link>http://www.example.com/categories/emacs/</link>
+    <description>Recent content in Emacs on Sytrumics</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 03 Nov 2017 22:08:41 +0800</lastBuildDate>
+    
+	<atom:link href="http://www.example.com/categories/emacs/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Mu4e&#43;offlineimap=email client</title>
+      <link>http://www.example.com/blog/mu4e/</link>
+      <pubDate>Fri, 03 Nov 2017 22:08:41 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/mu4e/</guid>
+      <description>这几日因为邮件里字体的问题，在一个愚蠢的问题上纠结了好久。最后是发觉是自己用的outlook默认不是等宽字 体显示，才造成了这样的乌龙。看到Leader用的是emacs收发邮件，我也想着不妨试一试。
+用Emacs收发邮件并不是一件简单的事情，这需要对email的整个系统的运作原理有一定的了解。发邮件和收邮件其 实是两套系统，可以用SMTP发，收有POP3和IMAP。为了安全起见，现在常见的邮件服务商都会在SSL里跑这些协议， 配置安全协议也是必不可少的一部分。总结下来，有3个地方需要注意
+ IMAP，用于收邮件 SMTP，用于发邮件 SSL的证书，与服务器交互，还有自己的个人信息如何用gpg来保存  这样一来组合就多了，我是从Emacs Email Category里了解 的。最终选用了这样的组合：
+ offlineimap用来从imap服务器上收取邮件 emacs自带的邮件发送package mu作索引，然后在emacs里用mu4e读  这套工具在只能在Linux跑。offlineimap可以从发行版的包管理器直接安，mu是一个软件，下好了可以直接 configure, make, make install,顺便把mu4e也装好了。之后就是配置和运行工作了。
+ 配置offlineimap， 接着运行 运行mu index --dir=~/Maildir生成索引 配置mu4e，然后启动  可以，这很geek。</description>
+    </item>
+    
+  </channel>
+</rss>

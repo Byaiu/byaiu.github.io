@@ -38,6 +38,20 @@ Heading 3 Yet another, but centered! Excepteur sint occaecat cupidatat non proid
     </item>
     
     <item>
+      <title>Emacs与Spacemacs</title>
+      <link>http://www.example.com/blog/emacs_and_spacemacs/</link>
+      <pubDate>Mon, 06 Nov 2017 17:17:32 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/emacs_and_spacemacs/</guid>
+      <description>在折腾了一些编辑器后，对于文本的编辑来看，还是Emacs用起来最顺手。而Emacs的配置却 是混乱不已，自己以前写的一些脚本并不具有扩展性。本着解决问题的想法，最终决定给予 spacemacs来开始自己emacs的配置了。可是，第一个问题就出来了：默认的中文字体好难看。
+编辑器的字体向来都是让人费解的一部分，尤其是Emacs这个古老的编辑器，它是根据 fontset来设置不同语言的字体的。其中最关键的函数就是下面这个：
+(set-fontset-font NAME TARGET FONT-SPEC &amp;amp;optional FRAME ADD) 它的说明是： &amp;gt; Modify fontset NAME to use FONT-SPEC for TARGET characters.
+需要结合实际的例子来看，我也是参考了折腾Emacs。
+(dolist (charset &amp;#39;(kana han symbol cjk-misc bopomofo)) (set-fontset-font (frame-parameter nil &amp;#39;font) charset (font-spec :family &amp;#34;DengXian&amp;#34; :size 13))) (frame-parameter nil &#39;font)从当前默认的frame中取得font的属性，这是一个很长 的字符串，在我的电脑上测试出来是-outline-Source Code Pro-normal-normal-normal-mono-13-*-*-*-p-*-iso8859-1。而charset是从列表里取出 来的，这些都是在charset-script-alist里有的值。font-spec能返回一个font的完整 描述。
+可以把这段代码放在自己的layer里，就可以不用在看难看的宋体了。等线算是新的字体吧， 看起来还是可以的。</description>
+    </item>
+    
+    <item>
       <title>Mu4e&#43;offlineimap=email client</title>
       <link>http://www.example.com/blog/mu4e/</link>
       <pubDate>Fri, 03 Nov 2017 22:08:41 +0800</pubDate>

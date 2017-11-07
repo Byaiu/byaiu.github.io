@@ -38,6 +38,15 @@
     </item>
     
     <item>
+      <title>Emacs</title>
+      <link>http://www.example.com/tags/emacs/</link>
+      <pubDate>Mon, 06 Nov 2017 17:17:32 +0800</pubDate>
+      
+      <guid>http://www.example.com/tags/emacs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>LLVM</title>
       <link>http://www.example.com/tags/llvm/</link>
       <pubDate>Tue, 31 Oct 2017 21:29:37 +0800</pubDate>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='在折腾了一些编辑器后，对于文本的编辑来看，还是Emacs用起来最顺手。而Emacs的配置却 是混乱不已，自己以前写的一些脚本并不具有扩展性。本着解决问题的想法，最终决定给予 spacemacs来开始自己emacs的配置了。可是，第一个问题就出来了：默认的中文字体好难看。
+编辑器的字体向来都是让人费解的一部分，尤其是Emacs这个古老的编辑器，它是根据 fontset来设置不同语言的字体的。其中最关键的函数就是下面这个：
+(set-fontset-font NAME TARGET FONT-SPEC &amp;optional FRAME ADD) 它的说明是： &gt; Modify fontset NAME to use FONT-SPEC for TARGET characters.
+需要结合实际的例子来看，我也是参考了折腾Emacs。
+(dolist (charset &#39;(kana han symbol cjk-misc bopomofo)) (set-fontset-font (frame-parameter nil &#39;font) charset (font-spec :family &#34;DengXian&#34; :size 13))) (frame-parameter nil &#39;font)从当前默认的frame中取得font的属性，这是一个很长 的字符串，在我的电脑上测试出来是-outline-Source Code Pro-normal-normal-normal-mono-13-*-*-*-p-*-iso8859-1。而charset是从列表里取出 来的，这些都是在charset-script-alist里有的值。font-spec能返回一个font的完整 描述。
+可以把这段代码放在自己的layer里，就可以不用在看难看的宋体了。等线算是新的字体吧， 看起来还是可以的。'>
+
+<meta property='og:title' content='Emacs与Spacemacs ⋆ Sytrumics'>
+<meta property='og:description' content='在折腾了一些编辑器后，对于文本的编辑来看，还是Emacs用起来最顺手。而Emacs的配置却 是混乱不已，自己以前写的一些脚本并不具有扩展性。本着解决问题的想法，最终决定给予 spacemacs来开始自己emacs的配置了。可是，第一个问题就出来了：默认的中文字体好难看。
+编辑器的字体向来都是让人费解的一部分，尤其是Emacs这个古老的编辑器，它是根据 fontset来设置不同语言的字体的。其中最关键的函数就是下面这个：
+(set-fontset-font NAME TARGET FONT-SPEC &amp;optional FRAME ADD) 它的说明是： &gt; Modify fontset NAME to use FONT-SPEC for TARGET characters.
+需要结合实际的例子来看，我也是参考了折腾Emacs。
+(dolist (charset &#39;(kana han symbol cjk-misc bopomofo)) (set-fontset-font (frame-parameter nil &#39;font) charset (font-spec :family &#34;DengXian&#34; :size 13))) (frame-parameter nil &#39;font)从当前默认的frame中取得font的属性，这是一个很长 的字符串，在我的电脑上测试出来是-outline-Source Code Pro-normal-normal-normal-mono-13-*-*-*-p-*-iso8859-1。而charset是从列表里取出 来的，这些都是在charset-script-alist里有的值。font-spec能返回一个font的完整 描述。
+可以把这段代码放在自己的layer里，就可以不用在看难看的宋体了。等线算是新的字体吧， 看起来还是可以的。'>
+<meta property='og:url' content='http://www.example.com/blog/emacs_and_spacemacs/'>
+<meta property='og:site_name' content='Sytrumics'>
+<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:tag' content='Emacs'><meta property='article:published_time' content='2017-11-06T17:17:32&#43;08:00'/><meta property='article:modified_time' content='2017-11-06T17:17:32&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+  <title>Emacs与Spacemacs ⋆ Sytrumics</title>
+  <link rel='canonical' href='http://www.example.com/blog/emacs_and_spacemacs/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-blog'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/blog/'>Blog</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Sytrumics</p>
+          
+          <p class='site-description subtitle'>Hi, welcome to my blog.</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Emacs与Spacemacs</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-11-06T17:17:32&#43;08:00'>2017, Nov 06</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+One min read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  <p>在折腾了一些编辑器后，对于文本的编辑来看，还是Emacs用起来最顺手。而Emacs的配置却
+是混乱不已，自己以前写的一些脚本并不具有扩展性。本着解决问题的想法，最终决定给予
+spacemacs来开始自己emacs的配置了。可是，第一个问题就出来了：默认的中文字体好难看。</p>
+
+<p>编辑器的字体向来都是让人费解的一部分，尤其是Emacs这个古老的编辑器，它是根据
+fontset来设置不同语言的字体的。其中最关键的函数就是下面这个：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lisp" data-lang="lisp">(set-fontset-font NAME TARGET FONT-SPEC &amp;optional FRAME ADD)</code></pre></div>
+<p>它的说明是：
+&gt; Modify fontset NAME to use FONT-SPEC for TARGET characters.</p>
+
+<p>需要结合实际的例子来看，我也是参考了<a href="http://emacser.com/torture-emacs.htm" target="_blank">折腾Emacs</a>。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lisp" data-lang="lisp">(dolist (charset <span style="color:#f92672">&#39;</span>(kana han symbol cjk-misc bopomofo))
+  (set-fontset-font (frame-parameter <span style="color:#66d9ef">nil</span> <span style="color:#e6db74">&#39;font</span>)
+                    charset (font-spec <span style="color:#e6db74">:family</span> <span style="color:#e6db74">&#34;DengXian&#34;</span>
+                                       <span style="color:#e6db74">:size</span> <span style="color:#ae81ff">13</span>)))</code></pre></div>
+<p><code>(frame-parameter nil 'font)</code>从当前默认的frame中取得<code>font</code>的属性，这是一个很长
+的字符串，在我的电脑上测试出来是<code>-outline-Source Code
+Pro-normal-normal-normal-mono-13-*-*-*-p-*-iso8859-1</code>。而<code>charset</code>是从列表里取出
+来的，这些都是在<code>charset-script-alist</code>里有的值。<code>font-spec</code>能返回一个font的完整
+描述。</p>
+
+<p>可以把这段代码放在自己的layer里，就可以不用在看难看的宋体了。等线算是新的字体吧，
+看起来还是可以的。</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/emacs'>Emacs</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/blog/mu4e/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Mu4e&#43;offlineimap=email client</a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/byaiu' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:byaiuwd@outlook.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+      Byaiu &copy; 2017 Sytrumic 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+

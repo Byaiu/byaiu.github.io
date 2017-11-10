@@ -38,6 +38,19 @@ Heading 3 Yet another, but centered! Excepteur sint occaecat cupidatat non proid
     </item>
     
     <item>
+      <title>parse lisp-like with flex &amp; bison</title>
+      <link>http://www.example.com/blog/flex_bison/</link>
+      <pubDate>Fri, 10 Nov 2017 22:58:05 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/flex_bison/</guid>
+      <description>从开始想要使用这两套工具做一些parse的事情，到初步把可用的程序调通，用了大概两天 的时间。这里的初步可用，指的是
+ 理清楚了yylex和yyparse之间如何交互 可以编译运行一个完整的程序 最简陋的类lisp的语法解析  yylex &amp;amp; yyparse 其实flex和bison只是code generator，运行之后是否使用这些code是通过我们自己写的 main函数来定的。其中，flex会产生yylex，如果在自行指定的action里不返回，就可 以一句话简单的调用了事儿；同理，bison会产生yyparse，这个函数会不断调用yylex， 根据yylex的返回值来断定token的类型，action里指定的动作会在规约成功后执行，如果 要构建语法树，action就是放置自己逻辑的地方。
+以下是flex的代码：
+%{ #include &amp;lt;stdlib.h&amp;gt; #include &amp;#34;test.tab.h&amp;#34; %} %% [a-zA-Z]+ { return SYMBOL;} [0-9]+ { return NUMBER;} [ ] ; . { yylval = yytext[0]; printf(&amp;#34;flex -&amp;gt; %c\n&amp;#34;, yylval); return yytext[0];} %% 以下是bison的代码：
+%token NUMBER SYMBOL %{ #include &amp;lt;stdio.h&amp;gt; extern int yylex(); void yyerror(char *s); %} %% program: program item | item ; item: sexp | NUMBER | SYMBOL ; sexp: &amp;#39;(&amp;#39; head parameters &amp;#39;)&amp;#39; ; head: SYMBOL ; parameters: parameters item | item ; %% void yyerror(char *s) { printf(&amp;#34;--&amp;gt; %s\n&amp;#34;, s); } int main() { yyparse(); } 只有两类类型，还有括号表达式。</description>
+    </item>
+    
+    <item>
       <title>Emacs与Spacemacs</title>
       <link>http://www.example.com/blog/emacs_and_spacemacs/</link>
       <pubDate>Mon, 06 Nov 2017 17:17:32 +0800</pubDate>
@@ -62,7 +75,7 @@ Heading 3 Yet another, but centered! Excepteur sint occaecat cupidatat non proid
 用Emacs收发邮件并不是一件简单的事情，这需要对email的整个系统的运作原理有一定的了解。发邮件和收邮件其 实是两套系统，可以用SMTP发，收有POP3和IMAP。为了安全起见，现在常见的邮件服务商都会在SSL里跑这些协议， 配置安全协议也是必不可少的一部分。总结下来，有3个地方需要注意
  IMAP，用于收邮件 SMTP，用于发邮件 SSL的证书，与服务器交互，还有自己的个人信息如何用gpg来保存  这样一来组合就多了，我是从Emacs Email Category里了解 的。最终选用了这样的组合：
  offlineimap用来从imap服务器上收取邮件 emacs自带的邮件发送package mu作索引，然后在emacs里用mu4e读  这套工具在只能在Linux跑。offlineimap可以从发行版的包管理器直接安，mu是一个软件，下好了可以直接 configure, make, make install,顺便把mu4e也装好了。之后就是配置和运行工作了。
- 配置offlineimap， 接着运行 运行mu index --dir=~/Maildir生成索引 配置mu4e，然后启动  可以，这很geek。</description>
+ 配置offlineimap， 运行之，以下载所有的邮件 运行mu index --dir=~/Maildir生成索引 配置mu4e，然后启动  可以，这很geek。</description>
     </item>
     
     <item>

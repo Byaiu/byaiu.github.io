@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Compiler on Sytrumics</title>
+    <link>http://www.example.com/tags/compiler/</link>
+    <description>Recent content in Compiler on Sytrumics</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Fri, 10 Nov 2017 22:58:05 +0800</lastBuildDate>
+    
+	<atom:link href="http://www.example.com/tags/compiler/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>parse lisp-like with flex &amp; bison</title>
+      <link>http://www.example.com/blog/flex_bison/</link>
+      <pubDate>Fri, 10 Nov 2017 22:58:05 +0800</pubDate>
+      
+      <guid>http://www.example.com/blog/flex_bison/</guid>
+      <description>从开始想要使用这两套工具做一些parse的事情，到初步把可用的程序调通，用了大概两天 的时间。这里的初步可用，指的是
+ 理清楚了yylex和yyparse之间如何交互 可以编译运行一个完整的程序 最简陋的类lisp的语法解析  yylex &amp;amp; yyparse 其实flex和bison只是code generator，运行之后是否使用这些code是通过我们自己写的 main函数来定的。其中，flex会产生yylex，如果在自行指定的action里不返回，就可 以一句话简单的调用了事儿；同理，bison会产生yyparse，这个函数会不断调用yylex， 根据yylex的返回值来断定token的类型，action里指定的动作会在规约成功后执行，如果 要构建语法树，action就是放置自己逻辑的地方。
+以下是flex的代码：
+%{ #include &amp;lt;stdlib.h&amp;gt; #include &amp;#34;test.tab.h&amp;#34; %} %% [a-zA-Z]+ { return SYMBOL;} [0-9]+ { return NUMBER;} [ ] ; . { yylval = yytext[0]; printf(&amp;#34;flex -&amp;gt; %c\n&amp;#34;, yylval); return yytext[0];} %% 以下是bison的代码：
+%token NUMBER SYMBOL %{ #include &amp;lt;stdio.h&amp;gt; extern int yylex(); void yyerror(char *s); %} %% program: program item | item ; item: sexp | NUMBER | SYMBOL ; sexp: &amp;#39;(&amp;#39; head parameters &amp;#39;)&amp;#39; ; head: SYMBOL ; parameters: parameters item | item ; %% void yyerror(char *s) { printf(&amp;#34;--&amp;gt; %s\n&amp;#34;, s); } int main() { yyparse(); } 只有两类类型，还有括号表达式。</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='从开始想要使用这两套工具做一些parse的事情，到初步把可用的程序调通，用了大概两天 的时间。这里的初步可用，指的是
+ 理清楚了yylex和yyparse之间如何交互 可以编译运行一个完整的程序 最简陋的类lisp的语法解析  yylex &amp; yyparse 其实flex和bison只是code generator，运行之后是否使用这些code是通过我们自己写的 main函数来定的。其中，flex会产生yylex，如果在自行指定的action里不返回，就可 以一句话简单的调用了事儿；同理，bison会产生yyparse，这个函数会不断调用yylex， 根据yylex的返回值来断定token的类型，action里指定的动作会在规约成功后执行，如果 要构建语法树，action就是放置自己逻辑的地方。
+以下是flex的代码：
+%{ #include &lt;stdlib.h&gt; #include &#34;test.tab.h&#34; %} %% [a-zA-Z]&#43; { return SYMBOL;} [0-9]&#43; { return NUMBER;} [ ] ; . { yylval = yytext[0]; printf(&#34;flex -&gt; %c\n&#34;, yylval); return yytext[0];} %% 以下是bison的代码：
+%token NUMBER SYMBOL %{ #include &lt;stdio.h&gt; extern int yylex(); void yyerror(char *s); %} %% program: program item | item ; item: sexp | NUMBER | SYMBOL ; sexp: &#39;(&#39; head parameters &#39;)&#39; ; head: SYMBOL ; parameters: parameters item | item ; %% void yyerror(char *s) { printf(&#34;--&gt; %s\n&#34;, s); } int main() { yyparse(); } 只有两类类型，还有括号表达式。'>
+
+<meta property='og:title' content='parse lisp-like with flex &amp; bison ⋆ Sytrumics'>
+<meta property='og:description' content='从开始想要使用这两套工具做一些parse的事情，到初步把可用的程序调通，用了大概两天 的时间。这里的初步可用，指的是
+ 理清楚了yylex和yyparse之间如何交互 可以编译运行一个完整的程序 最简陋的类lisp的语法解析  yylex &amp; yyparse 其实flex和bison只是code generator，运行之后是否使用这些code是通过我们自己写的 main函数来定的。其中，flex会产生yylex，如果在自行指定的action里不返回，就可 以一句话简单的调用了事儿；同理，bison会产生yyparse，这个函数会不断调用yylex， 根据yylex的返回值来断定token的类型，action里指定的动作会在规约成功后执行，如果 要构建语法树，action就是放置自己逻辑的地方。
+以下是flex的代码：
+%{ #include &lt;stdlib.h&gt; #include &#34;test.tab.h&#34; %} %% [a-zA-Z]&#43; { return SYMBOL;} [0-9]&#43; { return NUMBER;} [ ] ; . { yylval = yytext[0]; printf(&#34;flex -&gt; %c\n&#34;, yylval); return yytext[0];} %% 以下是bison的代码：
+%token NUMBER SYMBOL %{ #include &lt;stdio.h&gt; extern int yylex(); void yyerror(char *s); %} %% program: program item | item ; item: sexp | NUMBER | SYMBOL ; sexp: &#39;(&#39; head parameters &#39;)&#39; ; head: SYMBOL ; parameters: parameters item | item ; %% void yyerror(char *s) { printf(&#34;--&gt; %s\n&#34;, s); } int main() { yyparse(); } 只有两类类型，还有括号表达式。'>
+<meta property='og:url' content='http://www.example.com/blog/flex_bison/'>
+<meta property='og:site_name' content='Sytrumics'>
+<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:tag' content='compiler'><meta property='article:published_time' content='2017-11-10T22:58:05&#43;08:00'/><meta property='article:modified_time' content='2017-11-10T22:58:05&#43;08:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+  <title>parse lisp-like with flex &amp; bison ⋆ Sytrumics</title>
+  <link rel='canonical' href='http://www.example.com/blog/flex_bison/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+</head>
+
+
+<body class='page type-blog'>
+  <div class='site'>
+
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/blog/'>Blog</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Sytrumics</p>
+          
+          <p class='site-description subtitle'>Hi, welcome to my blog.</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>parse lisp-like with flex &amp; bison</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-11-10T22:58:05&#43;08:00'>2017, Nov 10</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+One min read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>从开始想要使用这两套工具做一些parse的事情，到初步把可用的程序调通，用了大概两天
+的时间。这里的初步可用，指的是</p>
+
+<ol>
+<li>理清楚了<code>yylex</code>和<code>yyparse</code>之间如何交互</li>
+<li>可以编译运行一个完整的程序</li>
+<li>最简陋的类<code>lisp</code>的语法解析</li>
+</ol>
+
+<h3 id="yylex-yyparse"><code>yylex</code> &amp; <code>yyparse</code></h3>
+
+<p>其实flex和bison只是<code>code generator</code>，运行之后是否使用这些code是通过我们自己写的
+<code>main</code>函数来定的。其中，flex会产生<code>yylex</code>，如果在自行指定的action里不返回，就可
+以一句话简单的调用了事儿；同理，bison会产生<code>yyparse</code>，这个函数会不断调用<code>yylex</code>，
+根据<code>yylex</code>的返回值来断定token的类型，action里指定的动作会在规约成功后执行，如果
+要构建语法树，action就是放置自己逻辑的地方。</p>
+
+<p>以下是flex的代码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-flex" data-lang="flex">%{
+
+#include &lt;stdlib.h&gt;
+#include &#34;test.tab.h&#34;
+
+%}
+
+%%
+
+[a-zA-Z]+ { return SYMBOL;}
+[0-9]+    { return NUMBER;}
+
+[ ]    ;
+.      { yylval = yytext[0]; printf(&#34;flex -&gt; %c\n&#34;, yylval); return yytext[0];}
+%%</code></pre></div>
+<p>以下是bison的代码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bison" data-lang="bison">%token NUMBER SYMBOL
+
+%{
+#include &lt;stdio.h&gt;
+extern int yylex();
+void yyerror(char *s);
+%}
+%%
+
+program:        program item
+        |       item
+        ;
+
+item:           sexp
+        |       NUMBER
+        |       SYMBOL
+        ;
+
+sexp:           &#39;(&#39; head parameters &#39;)&#39;
+        ;
+
+head:           SYMBOL
+        ;
+
+parameters:     parameters item
+        |       item
+        ;
+%%
+
+void yyerror(char *s)
+{
+    printf(&#34;--&gt; %s\n&#34;, s);
+}
+
+int main()
+{
+    yyparse();
+}</code></pre></div>
+<p>只有两类类型，还有括号表达式。</p>
+
+<h3 id="迷思">迷思</h3>
+
+<p>这只是龙书第4章的一部分，龙书一共有12章。我看到不少的文章是说parse的，编译原理之
+后的代码生成、优化、分析等，网上的文章就少了很多。我自己也不能写一个通用的parser
+generator出来，至少现在还只是用别人的generator做点事情。我最初的想法是写一个简单
+的lisp出来，这只是最初的一步，就是怎么把lisp文件换成一个内存的数据结构表示。接下
+来的工作就是细化这个BNF，然后构建自己的数据结构出来。</p>
+
+<p>整个工作是受<a href="http://www.buildyourownlisp.com/" target="_blank">Build Your Own Lisp</a>启发而来，只
+是因为它用了作者自己写的一个叫<code>mpc</code>的parser库，我感觉不纯，所以就打算自己用现有
+工具做一个用。现在看来从这条支路分出去就是parser generator的事情了，先不往这里走，
+写Lisp要紧。</p>
+
+<p>查了不少资料，PgSql、MySql等SQL的解析好像就是用bison做的，omnet里ned语言和msg定
+义也都是flex和bison做得，现在的我看来，这是一个相对高级的工作。parser已经是一个
+非常成熟的领域了，但我还是觉得应该实际去做一做。这样的领域还有不少，比如汇编。网
+络编程也是，一直想不到做什么，今天忽然觉得可以做一个聊天服务器，就用C++，学一下
+怎么构建一个合适的类，如何体现出架构。不为什么，只是觉得应该做一些这样的事情。聊
+天服务器做好了，再做聊天客户端，再做网页端。再看看DAW，音频。好玩的事情很多，挑
+要紧的做。</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/compiler'>Compiler</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/blog/emacs_and_spacemacs/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Emacs与Spacemacs</a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='https://github.com/byaiu' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:byaiuwd@outlook.com' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+      
+
+      Byaiu &copy; 2017 Sytrumic 
+  </p>
+</div>
+
+      </div>
+    </footer>
+
+  </div><script src='/assets/js/main.5871befd.js'></script><script src='/js/custom.js'></script></body>
+
+</html>
+
